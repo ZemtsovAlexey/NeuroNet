@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -212,7 +212,7 @@ namespace test
             }
 
             int success = 0;
-            int i = 0;
+            long i = 0;
 
             while (success < _stopSuccess)
             {
@@ -244,7 +244,6 @@ namespace test
                     foreach (var dVal in captcha.Captcha
                         .Select(codeChar => Convert.ToInt32(codeChar.ToString()))
                         .Select(IntToDoubleArr))
-                    //.Select(intVal => IntToDoubleArr(intVal, _net.GetOut(temp))))
                     {
                         res.AddRange(dVal);
                     }
@@ -270,13 +269,18 @@ namespace test
 
                 if (showLogs)
                 {
-                    resultTextBox.AppendText($"{Environment.NewLine}Iter {i}: code {captcha.Captcha} - answer {fOut}. errors {err}, success {success}, time {sw.ElapsedMilliseconds}");
-                    resultTextBox.SelectionStart = resultTextBox.Text.Length;
-                    resultTextBox.ScrollToCaret();
+                    BeginInvoke(new EventHandler<LogEventArgs>(ShowLogs), this, new LogEventArgs(i, captcha.Captcha, fOut, err, success, sw.ElapsedMilliseconds));
                 }
 
                 i++;
             }
+        }
+
+        private void ShowLogs(object sender, LogEventArgs e)
+        {
+            resultTextBox.AppendText($"{Environment.NewLine}Iter {e.I}: code {e.Captcha} - answer {e.Answer}. errors {e.Errors}, success {e.Success}, time {e.Time}");
+            resultTextBox.SelectionStart = resultTextBox.Text.Length;
+            resultTextBox.ScrollToCaret();
         }
 
         private void stopLearnTextBox_TextChanged(object sender, EventArgs e)
