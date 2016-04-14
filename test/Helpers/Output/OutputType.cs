@@ -3,6 +3,7 @@
     public enum OutputType
     {
         Binary,
-        Decimal
+        Decimal,
+        Bool
     }
 }

@@ -18,6 +18,10 @@ namespace test.Helpers.Output
                     outputFunction = new DecimalOutput();
                     break;
 
+                case OutputType.Bool:
+                    outputFunction = new BoolOutput();
+                    break;
+
                 default:
                     throw new ArgumentOutOfRangeException(nameof(type), type, null);
             }

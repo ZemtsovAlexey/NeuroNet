@@ -11,6 +11,8 @@ namespace CaptchaGenerator
 
         public static CaptchaInfo Gen(int stringLength = 5, int randomHeight = 4, int numberLine = 8, int captchaWidth = 80, int captchaHeight = 34, string backColor = "#ececec")
         {
+            //stringLength = 5;
+
             Bitmap bmap = new Bitmap(captchaWidth, captchaHeight);
             Graphics grfs = Graphics.FromImage(bmap);
             var backGround = ColorTranslator.FromHtml(backColor);

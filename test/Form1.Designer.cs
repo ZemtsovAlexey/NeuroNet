@@ -31,10 +31,14 @@
             this.openFileDialog3 = new System.Windows.Forms.OpenFileDialog();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.settingTabControl = new System.Windows.Forms.TabControl();
-            this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.lineCount = new System.Windows.Forms.NumericUpDown();
+            this.label9 = new System.Windows.Forms.Label();
+            this.heightRange = new System.Windows.Forms.NumericUpDown();
+            this.label5 = new System.Windows.Forms.Label();
             this.digitsNum = new System.Windows.Forms.NumericUpDown();
             this.label8 = new System.Windows.Forms.Label();
+            this.settingTabControl = new System.Windows.Forms.TabControl();
+            this.tabPage2 = new System.Windows.Forms.TabPage();
             this.OutputTypePanel = new System.Windows.Forms.Panel();
             this.Decimal = new System.Windows.Forms.RadioButton();
             this.Binary = new System.Windows.Forms.RadioButton();
@@ -64,21 +68,18 @@
             this.GenerateBtn = new System.Windows.Forms.Button();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.tabControl1 = new System.Windows.Forms.TabControl();
-            this.heightRange = new System.Windows.Forms.NumericUpDown();
-            this.label5 = new System.Windows.Forms.Label();
-            this.lineCount = new System.Windows.Forms.NumericUpDown();
-            this.label9 = new System.Windows.Forms.Label();
+            this.Bool = new System.Windows.Forms.RadioButton();
             this.tabPage1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.lineCount)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.heightRange)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.digitsNum)).BeginInit();
             this.settingTabControl.SuspendLayout();
             this.tabPage2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.digitsNum)).BeginInit();
             this.OutputTypePanel.SuspendLayout();
             this.ActivationFunctionPanel.SuspendLayout();
             this.tabPage3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.tabControl1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.heightRange)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.lineCount)).BeginInit();
             this.SuspendLayout();
             // 
             // openFileDialog3
@@ -111,34 +112,59 @@
             this.tabPage1.Text = "tabPage1";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
-            // settingTabControl
+            // lineCount
             // 
-            this.settingTabControl.Controls.Add(this.tabPage2);
-            this.settingTabControl.Controls.Add(this.tabPage3);
-            this.settingTabControl.Location = new System.Drawing.Point(544, 6);
-            this.settingTabControl.Name = "settingTabControl";
-            this.settingTabControl.SelectedIndex = 0;
-            this.settingTabControl.Size = new System.Drawing.Size(437, 183);
-            this.settingTabControl.TabIndex = 60;
+            this.lineCount.Location = new System.Drawing.Point(377, 119);
+            this.lineCount.Maximum = new decimal(new int[] {
+            20,
+            0,
+            0,
+            0});
+            this.lineCount.Name = "lineCount";
+            this.lineCount.Size = new System.Drawing.Size(48, 20);
+            this.lineCount.TabIndex = 70;
+            this.lineCount.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.lineCount.ValueChanged += new System.EventHandler(this.lineCount_ValueChanged);
             // 
-            // tabPage2
+            // label9
             // 
-            this.tabPage2.Controls.Add(this.OutputTypePanel);
-            this.tabPage2.Controls.Add(this.ActivationFunctionPanel);
-            this.tabPage2.Controls.Add(this.button4);
-            this.tabPage2.Controls.Add(this.label7);
-            this.tabPage2.Controls.Add(this.saveNetBtn);
-            this.tabPage2.Controls.Add(this.label6);
-            this.tabPage2.Controls.Add(this.resetNetBtn);
-            this.tabPage2.Controls.Add(this.netXTB);
-            this.tabPage2.Controls.Add(this.netYTB);
-            this.tabPage2.Location = new System.Drawing.Point(4, 22);
-            this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(429, 157);
-            this.tabPage2.TabIndex = 0;
-            this.tabPage2.Text = "Сеть";
-            this.tabPage2.UseVisualStyleBackColor = true;
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(431, 121);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(77, 13);
+            this.label9.TabIndex = 69;
+            this.label9.Text = "Линий поверх";
+            // 
+            // heightRange
+            // 
+            this.heightRange.Location = new System.Drawing.Point(377, 93);
+            this.heightRange.Maximum = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.heightRange.Name = "heightRange";
+            this.heightRange.Size = new System.Drawing.Size(48, 20);
+            this.heightRange.TabIndex = 68;
+            this.heightRange.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.heightRange.ValueChanged += new System.EventHandler(this.heightRange_ValueChanged);
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(431, 95);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(92, 13);
+            this.label5.TabIndex = 67;
+            this.label5.Text = "Разброс высоты";
             // 
             // digitsNum
             // 
@@ -172,13 +198,43 @@
             this.label8.TabIndex = 65;
             this.label8.Text = "Длина";
             // 
+            // settingTabControl
+            // 
+            this.settingTabControl.Controls.Add(this.tabPage2);
+            this.settingTabControl.Controls.Add(this.tabPage3);
+            this.settingTabControl.Location = new System.Drawing.Point(544, 6);
+            this.settingTabControl.Name = "settingTabControl";
+            this.settingTabControl.SelectedIndex = 0;
+            this.settingTabControl.Size = new System.Drawing.Size(437, 183);
+            this.settingTabControl.TabIndex = 60;
+            // 
+            // tabPage2
+            // 
+            this.tabPage2.Controls.Add(this.OutputTypePanel);
+            this.tabPage2.Controls.Add(this.ActivationFunctionPanel);
+            this.tabPage2.Controls.Add(this.button4);
+            this.tabPage2.Controls.Add(this.label7);
+            this.tabPage2.Controls.Add(this.saveNetBtn);
+            this.tabPage2.Controls.Add(this.label6);
+            this.tabPage2.Controls.Add(this.resetNetBtn);
+            this.tabPage2.Controls.Add(this.netXTB);
+            this.tabPage2.Controls.Add(this.netYTB);
+            this.tabPage2.Location = new System.Drawing.Point(4, 22);
+            this.tabPage2.Name = "tabPage2";
+            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage2.Size = new System.Drawing.Size(429, 157);
+            this.tabPage2.TabIndex = 0;
+            this.tabPage2.Text = "Сеть";
+            this.tabPage2.UseVisualStyleBackColor = true;
+            // 
             // OutputTypePanel
             // 
+            this.OutputTypePanel.Controls.Add(this.Bool);
             this.OutputTypePanel.Controls.Add(this.Decimal);
             this.OutputTypePanel.Controls.Add(this.Binary);
-            this.OutputTypePanel.Location = new System.Drawing.Point(6, 93);
+            this.OutputTypePanel.Location = new System.Drawing.Point(9, 70);
             this.OutputTypePanel.Name = "OutputTypePanel";
-            this.OutputTypePanel.Size = new System.Drawing.Size(99, 52);
+            this.OutputTypePanel.Size = new System.Drawing.Size(99, 81);
             this.OutputTypePanel.TabIndex = 63;
             // 
             // Decimal
@@ -207,7 +263,7 @@
             // 
             this.ActivationFunctionPanel.Controls.Add(this.BipolarSigmoid);
             this.ActivationFunctionPanel.Controls.Add(this.Sigmoid);
-            this.ActivationFunctionPanel.Location = new System.Drawing.Point(6, 35);
+            this.ActivationFunctionPanel.Location = new System.Drawing.Point(9, 11);
             this.ActivationFunctionPanel.Name = "ActivationFunctionPanel";
             this.ActivationFunctionPanel.Size = new System.Drawing.Size(99, 52);
             this.ActivationFunctionPanel.TabIndex = 62;
@@ -453,59 +509,15 @@
             this.tabControl1.Size = new System.Drawing.Size(995, 733);
             this.tabControl1.TabIndex = 7;
             // 
-            // heightRange
+            // Bool
             // 
-            this.heightRange.Location = new System.Drawing.Point(377, 93);
-            this.heightRange.Maximum = new decimal(new int[] {
-            10,
-            0,
-            0,
-            0});
-            this.heightRange.Name = "heightRange";
-            this.heightRange.Size = new System.Drawing.Size(48, 20);
-            this.heightRange.TabIndex = 68;
-            this.heightRange.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.heightRange.ValueChanged += new System.EventHandler(this.heightRange_ValueChanged);
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(431, 95);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(92, 13);
-            this.label5.TabIndex = 67;
-            this.label5.Text = "Разброс высоты";
-            // 
-            // lineCount
-            // 
-            this.lineCount.Location = new System.Drawing.Point(377, 119);
-            this.lineCount.Maximum = new decimal(new int[] {
-            20,
-            0,
-            0,
-            0});
-            this.lineCount.Name = "lineCount";
-            this.lineCount.Size = new System.Drawing.Size(48, 20);
-            this.lineCount.TabIndex = 70;
-            this.lineCount.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.lineCount.ValueChanged += new System.EventHandler(this.lineCount_ValueChanged);
-            // 
-            // label9
-            // 
-            this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(431, 121);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(77, 13);
-            this.label9.TabIndex = 69;
-            this.label9.Text = "Линий поверх";
+            this.Bool.AutoSize = true;
+            this.Bool.Location = new System.Drawing.Point(3, 51);
+            this.Bool.Name = "Bool";
+            this.Bool.Size = new System.Drawing.Size(46, 17);
+            this.Bool.TabIndex = 62;
+            this.Bool.Text = "Bool";
+            this.Bool.UseVisualStyleBackColor = true;
             // 
             // Form1
             // 
@@ -517,10 +529,12 @@
             this.Text = "Form1";
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.lineCount)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.heightRange)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.digitsNum)).EndInit();
             this.settingTabControl.ResumeLayout(false);
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.digitsNum)).EndInit();
             this.OutputTypePanel.ResumeLayout(false);
             this.OutputTypePanel.PerformLayout();
             this.ActivationFunctionPanel.ResumeLayout(false);
@@ -529,8 +543,6 @@
             this.tabPage3.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.tabControl1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.heightRange)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.lineCount)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -576,6 +588,7 @@
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.NumericUpDown heightRange;
         private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.RadioButton Bool;
     }
 }
 

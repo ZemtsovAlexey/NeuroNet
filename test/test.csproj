@@ -56,6 +56,7 @@
     <Compile Include="Extensions\RandomNumbers.cs" />
     <Compile Include="Helpers\FormHelpers.cs" />
     <Compile Include="Helpers\NetHelpers.cs" />
+    <Compile Include="Helpers\Output\BoolOutput.cs" />
     <Compile Include="Helpers\Output\OutputFactory.cs" />
     <Compile Include="Helpers\Output\OutputType.cs" />
     <Compile Include="Helpers\Output\DecimalOutput.cs" />
