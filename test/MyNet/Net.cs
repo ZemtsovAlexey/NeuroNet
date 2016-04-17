@@ -61,7 +61,7 @@ namespace test.MyNet
             return _layers.Aggregate(x, (current, layer) => layer.GetOut(current));
         }
 
-        public void Corr(double[] inputs, double[] rightResult, double kLern = 0.85)
+        public void Correct(double[] inputs, double[] rightResult, double kLern = 0.85)
         {
             GetOut(inputs);
 
@@ -80,16 +80,6 @@ namespace test.MyNet
                 // Изменяем веса выходного слоя
                 CorrectLayerWeigths(_layers[k], kLern);
 
-                //if (k == 0)
-                //{
-                //    currLayer.GetOut(inputs);
-
-                //    for (var x = 0; x < currLayer.Outputs.Length; x++)
-                //    {
-                //        Context[x] = currLayer.Outputs[x];
-                //    }
-                //}
-
                 if (k > 0)
                 {
                     // Вычисляем дельта слоя к-1
@@ -100,9 +90,9 @@ namespace test.MyNet
 
         private void CorrectLayerWeigths(Layer layer, double kLern)
         {
-            for (var x = 0; x < layer.Inputs.Length; x++)
+            for (var y = 0; y < layer.CountY; y++)
             {
-                for (var y = 0; y < layer.CountY; y++)
+                for (var x = 0; x < layer.Inputs.Length; x++)
                 {
                     layer[y, x] += kLern * layer.Delta[y] * layer.Inputs[x];
                 }

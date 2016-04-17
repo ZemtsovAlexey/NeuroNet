@@ -120,9 +120,9 @@ namespace NeuroNet
 
         private void CorrectLayerWeigths(Layer layer, double kLern)
         {
-            for (var x = 0; x < layer.Inputs.Length; x++)
+            for (var y = 0; y < layer.CountY; y++)
             {
-                for (var y = 0; y < layer.CountY; y++)
+                for (var x = 0; x < layer.Inputs.Length; x++)
                 {
                     layer[y, x] += kLern * layer.Delta[y] * layer.Inputs[x];
                 }

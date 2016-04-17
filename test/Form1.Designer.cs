@@ -28,9 +28,18 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.openFileDialog3 = new System.Windows.Forms.OpenFileDialog();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.tabControl2 = new System.Windows.Forms.TabControl();
+            this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.resultTextBox = new System.Windows.Forms.TextBox();
+            this.ShowLogsBtn = new System.Windows.Forms.Button();
+            this.tabPage5 = new System.Windows.Forms.TabPage();
+            this.chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.lineCount = new System.Windows.Forms.NumericUpDown();
             this.label9 = new System.Windows.Forms.Label();
             this.heightRange = new System.Windows.Forms.NumericUpDown();
@@ -40,6 +49,7 @@
             this.settingTabControl = new System.Windows.Forms.TabControl();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.OutputTypePanel = new System.Windows.Forms.Panel();
+            this.Bool = new System.Windows.Forms.RadioButton();
             this.Decimal = new System.Windows.Forms.RadioButton();
             this.Binary = new System.Windows.Forms.RadioButton();
             this.ActivationFunctionPanel = new System.Windows.Forms.Panel();
@@ -63,13 +73,15 @@
             this.label2 = new System.Windows.Forms.Label();
             this.alphaTextBox = new System.Windows.Forms.TextBox();
             this.sLearnTextBox = new System.Windows.Forms.TextBox();
-            this.resultTextBox = new System.Windows.Forms.TextBox();
             this.captchaResultLabel = new System.Windows.Forms.Label();
             this.GenerateBtn = new System.Windows.Forms.Button();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.tabControl1 = new System.Windows.Forms.TabControl();
-            this.Bool = new System.Windows.Forms.RadioButton();
             this.tabPage1.SuspendLayout();
+            this.tabControl2.SuspendLayout();
+            this.tabPage4.SuspendLayout();
+            this.tabPage5.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.lineCount)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.heightRange)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.digitsNum)).BeginInit();
@@ -93,6 +105,7 @@
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.tabControl2);
             this.tabPage1.Controls.Add(this.lineCount);
             this.tabPage1.Controls.Add(this.label9);
             this.tabPage1.Controls.Add(this.heightRange);
@@ -100,7 +113,6 @@
             this.tabPage1.Controls.Add(this.digitsNum);
             this.tabPage1.Controls.Add(this.label8);
             this.tabPage1.Controls.Add(this.settingTabControl);
-            this.tabPage1.Controls.Add(this.resultTextBox);
             this.tabPage1.Controls.Add(this.captchaResultLabel);
             this.tabPage1.Controls.Add(this.GenerateBtn);
             this.tabPage1.Controls.Add(this.pictureBox1);
@@ -111,6 +123,76 @@
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "tabPage1";
             this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // tabControl2
+            // 
+            this.tabControl2.Controls.Add(this.tabPage4);
+            this.tabControl2.Controls.Add(this.tabPage5);
+            this.tabControl2.Location = new System.Drawing.Point(6, 151);
+            this.tabControl2.Name = "tabControl2";
+            this.tabControl2.SelectedIndex = 0;
+            this.tabControl2.Size = new System.Drawing.Size(975, 550);
+            this.tabControl2.TabIndex = 72;
+            // 
+            // tabPage4
+            // 
+            this.tabPage4.Controls.Add(this.resultTextBox);
+            this.tabPage4.Controls.Add(this.ShowLogsBtn);
+            this.tabPage4.Location = new System.Drawing.Point(4, 22);
+            this.tabPage4.Name = "tabPage4";
+            this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage4.Size = new System.Drawing.Size(967, 524);
+            this.tabPage4.TabIndex = 0;
+            this.tabPage4.Text = "tabPage4";
+            this.tabPage4.UseVisualStyleBackColor = true;
+            // 
+            // resultTextBox
+            // 
+            this.resultTextBox.Location = new System.Drawing.Point(6, 6);
+            this.resultTextBox.Multiline = true;
+            this.resultTextBox.Name = "resultTextBox";
+            this.resultTextBox.Size = new System.Drawing.Size(365, 512);
+            this.resultTextBox.TabIndex = 31;
+            // 
+            // ShowLogsBtn
+            // 
+            this.ShowLogsBtn.Location = new System.Drawing.Point(377, 6);
+            this.ShowLogsBtn.Name = "ShowLogsBtn";
+            this.ShowLogsBtn.Size = new System.Drawing.Size(75, 23);
+            this.ShowLogsBtn.TabIndex = 64;
+            this.ShowLogsBtn.Text = "show logs";
+            this.ShowLogsBtn.UseVisualStyleBackColor = true;
+            this.ShowLogsBtn.Click += new System.EventHandler(this.ShowLogsBtn_Click);
+            // 
+            // tabPage5
+            // 
+            this.tabPage5.Controls.Add(this.chart1);
+            this.tabPage5.Location = new System.Drawing.Point(4, 22);
+            this.tabPage5.Name = "tabPage5";
+            this.tabPage5.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage5.Size = new System.Drawing.Size(967, 524);
+            this.tabPage5.TabIndex = 1;
+            this.tabPage5.Text = "tabPage5";
+            this.tabPage5.UseVisualStyleBackColor = true;
+            // 
+            // chart1
+            // 
+            chartArea1.Name = "ChartArea1";
+            this.chart1.ChartAreas.Add(chartArea1);
+            legend1.Name = "Legend1";
+            this.chart1.Legends.Add(legend1);
+            this.chart1.Location = new System.Drawing.Point(6, 6);
+            this.chart1.Name = "chart1";
+            this.chart1.Palette = System.Windows.Forms.DataVisualization.Charting.ChartColorPalette.Pastel;
+            series1.ChartArea = "ChartArea1";
+            series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.SplineArea;
+            series1.Legend = "Legend1";
+            series1.Name = "Series1";
+            this.chart1.Series.Add(series1);
+            this.chart1.Size = new System.Drawing.Size(955, 515);
+            this.chart1.TabIndex = 71;
+            this.chart1.Text = "chart1";
+            this.chart1.DoubleClick += new System.EventHandler(this.chart1_DoubleClick);
             // 
             // lineCount
             // 
@@ -205,7 +287,7 @@
             this.settingTabControl.Location = new System.Drawing.Point(544, 6);
             this.settingTabControl.Name = "settingTabControl";
             this.settingTabControl.SelectedIndex = 0;
-            this.settingTabControl.Size = new System.Drawing.Size(437, 183);
+            this.settingTabControl.Size = new System.Drawing.Size(437, 139);
             this.settingTabControl.TabIndex = 60;
             // 
             // tabPage2
@@ -222,7 +304,7 @@
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(429, 157);
+            this.tabPage2.Size = new System.Drawing.Size(429, 113);
             this.tabPage2.TabIndex = 0;
             this.tabPage2.Text = "Сеть";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -232,30 +314,40 @@
             this.OutputTypePanel.Controls.Add(this.Bool);
             this.OutputTypePanel.Controls.Add(this.Decimal);
             this.OutputTypePanel.Controls.Add(this.Binary);
-            this.OutputTypePanel.Location = new System.Drawing.Point(9, 70);
+            this.OutputTypePanel.Location = new System.Drawing.Point(114, 7);
             this.OutputTypePanel.Name = "OutputTypePanel";
             this.OutputTypePanel.Size = new System.Drawing.Size(99, 81);
             this.OutputTypePanel.TabIndex = 63;
             // 
+            // Bool
+            // 
+            this.Bool.AutoSize = true;
+            this.Bool.Location = new System.Drawing.Point(3, 51);
+            this.Bool.Name = "Bool";
+            this.Bool.Size = new System.Drawing.Size(46, 17);
+            this.Bool.TabIndex = 62;
+            this.Bool.Text = "Bool";
+            this.Bool.UseVisualStyleBackColor = true;
+            // 
             // Decimal
             // 
             this.Decimal.AutoSize = true;
+            this.Decimal.Checked = true;
             this.Decimal.Location = new System.Drawing.Point(3, 28);
             this.Decimal.Name = "Decimal";
             this.Decimal.Size = new System.Drawing.Size(63, 17);
             this.Decimal.TabIndex = 61;
+            this.Decimal.TabStop = true;
             this.Decimal.Text = "Decimal";
             this.Decimal.UseVisualStyleBackColor = true;
             // 
             // Binary
             // 
             this.Binary.AutoSize = true;
-            this.Binary.Checked = true;
             this.Binary.Location = new System.Drawing.Point(3, 4);
             this.Binary.Name = "Binary";
             this.Binary.Size = new System.Drawing.Size(54, 17);
             this.Binary.TabIndex = 60;
-            this.Binary.TabStop = true;
             this.Binary.Text = "Binary";
             this.Binary.UseVisualStyleBackColor = true;
             // 
@@ -303,7 +395,7 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(246, 70);
+            this.label7.Location = new System.Drawing.Point(267, 9);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(12, 13);
             this.label7.TabIndex = 59;
@@ -322,7 +414,7 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(328, 71);
+            this.label6.Location = new System.Drawing.Point(320, 9);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(12, 13);
             this.label6.TabIndex = 58;
@@ -340,17 +432,17 @@
             // 
             // netXTB
             // 
-            this.netXTB.Location = new System.Drawing.Point(192, 67);
+            this.netXTB.Location = new System.Drawing.Point(231, 6);
             this.netXTB.Name = "netXTB";
-            this.netXTB.Size = new System.Drawing.Size(48, 20);
+            this.netXTB.Size = new System.Drawing.Size(30, 20);
             this.netXTB.TabIndex = 57;
             this.netXTB.TextChanged += new System.EventHandler(this.netXTB_TextChanged);
             // 
             // netYTB
             // 
-            this.netYTB.Location = new System.Drawing.Point(274, 67);
+            this.netYTB.Location = new System.Drawing.Point(285, 7);
             this.netYTB.Name = "netYTB";
-            this.netYTB.Size = new System.Drawing.Size(48, 20);
+            this.netYTB.Size = new System.Drawing.Size(29, 20);
             this.netYTB.TabIndex = 56;
             this.netYTB.TextChanged += new System.EventHandler(this.netYTB_TextChanged);
             // 
@@ -369,7 +461,7 @@
             this.tabPage3.Location = new System.Drawing.Point(4, 22);
             this.tabPage3.Name = "tabPage3";
             this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage3.Size = new System.Drawing.Size(429, 157);
+            this.tabPage3.Size = new System.Drawing.Size(429, 113);
             this.tabPage3.TabIndex = 1;
             this.tabPage3.Text = "Обучение";
             this.tabPage3.UseVisualStyleBackColor = true;
@@ -462,14 +554,6 @@
             this.sLearnTextBox.TabIndex = 45;
             this.sLearnTextBox.TextChanged += new System.EventHandler(this.sLearnTextBox_TextChanged);
             // 
-            // resultTextBox
-            // 
-            this.resultTextBox.Location = new System.Drawing.Point(6, 151);
-            this.resultTextBox.Multiline = true;
-            this.resultTextBox.Name = "resultTextBox";
-            this.resultTextBox.Size = new System.Drawing.Size(365, 550);
-            this.resultTextBox.TabIndex = 31;
-            // 
             // captchaResultLabel
             // 
             this.captchaResultLabel.AutoSize = true;
@@ -492,7 +576,7 @@
             // pictureBox1
             // 
             this.pictureBox1.BackColor = System.Drawing.SystemColors.ButtonFace;
-            this.pictureBox1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.pictureBox1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.pictureBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.pictureBox1.Location = new System.Drawing.Point(6, 6);
             this.pictureBox1.Name = "pictureBox1";
@@ -509,16 +593,6 @@
             this.tabControl1.Size = new System.Drawing.Size(995, 733);
             this.tabControl1.TabIndex = 7;
             // 
-            // Bool
-            // 
-            this.Bool.AutoSize = true;
-            this.Bool.Location = new System.Drawing.Point(3, 51);
-            this.Bool.Name = "Bool";
-            this.Bool.Size = new System.Drawing.Size(46, 17);
-            this.Bool.TabIndex = 62;
-            this.Bool.Text = "Bool";
-            this.Bool.UseVisualStyleBackColor = true;
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -529,6 +603,11 @@
             this.Text = "Form1";
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
+            this.tabControl2.ResumeLayout(false);
+            this.tabPage4.ResumeLayout(false);
+            this.tabPage4.PerformLayout();
+            this.tabPage5.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.chart1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.lineCount)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.heightRange)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.digitsNum)).EndInit();
@@ -589,6 +668,11 @@
         private System.Windows.Forms.NumericUpDown heightRange;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.RadioButton Bool;
+        private System.Windows.Forms.Button ShowLogsBtn;
+        private System.Windows.Forms.DataVisualization.Charting.Chart chart1;
+        private System.Windows.Forms.TabControl tabControl2;
+        private System.Windows.Forms.TabPage tabPage4;
+        private System.Windows.Forms.TabPage tabPage5;
     }
 }
 

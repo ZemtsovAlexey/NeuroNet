@@ -9,7 +9,7 @@ namespace CaptchaGenerator
         private static readonly string[] RundomColors = { "#0000FF", "#000080", "#008000" };
         private static Random rnd = new Random();
 
-        public static CaptchaInfo Gen(int stringLength = 5, int randomHeight = 4, int numberLine = 8, int captchaWidth = 80, int captchaHeight = 34, string backColor = "#ececec")
+        public static CaptchaInfo Gen(int stringLength = 5, int randomHeight = 4, int numberLine = 8, int captchaWidth = 20, int captchaHeight = 34, string backColor = "#ececec")
         {
             //stringLength = 5;
 

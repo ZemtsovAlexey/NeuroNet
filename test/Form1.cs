@@ -8,6 +8,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Windows.Forms.DataVisualization.Charting;
 using CaptchaGenerator;
 using test.Extensions;
 using test.Helpers;
@@ -28,11 +29,17 @@ namespace test
         private int _digitsCount = 1;
         private int _heightRange = 0;
         private int _lineCount = 0;
+        private bool _showLogs = true;
         private Net _net;
         private IActivation _activationFunction;
         private IOutput _outputFunction;
+        private Series _seriesStop;
+        private Series _seriesSuccess;
+        private Series _seriesErrors;
+        private int _succeses;
+        private int _errors;
 
-        private int _netSizeX = 10;
+        private int _netSizeX = 15;
         private int _netSizeY = 10;
 
         public Form1()
@@ -59,13 +66,49 @@ namespace test
             _outputFunction.Count = _digitsCount;
             _outputNeurons = _outputFunction.OutputNeurons;
 
-            var inputSize = 80 * 34;
+            var inputSize = 20 * 34;
             var layers = NetHelpers.GetLayerSizeList(_netSizeX, _netSizeY, _outputNeurons);
 
             _net = new Net(_activationFunction, inputSize, layers.ToArray());
 
             netXTB.Text = _net.SizeX.ToString();
             netYTB.Text = _net.SizeY.ToString();
+
+            chart1.Series.Clear();
+
+            _seriesStop = new Series
+            {
+                Name = "Stop",
+                Color = Color.Blue,
+                IsVisibleInLegend = false,
+                IsXValueIndexed = true,
+                ChartType = SeriesChartType.Spline,
+                BorderWidth = 2
+            };
+
+            _seriesSuccess = new Series
+            {
+                Name = "Success",
+                Color = Color.Green,
+                IsVisibleInLegend = false,
+                IsXValueIndexed = true,
+                ChartType = SeriesChartType.Spline,
+                BorderWidth = 3
+            };
+
+            _seriesErrors = new Series
+            {
+                Name = "Error",
+                Color = Color.Red,
+                IsVisibleInLegend = false,
+                IsXValueIndexed = true,
+                ChartType = SeriesChartType.Spline,
+                BorderWidth = 3
+            };
+
+            this.chart1.Series.Add(_seriesStop);
+            this.chart1.Series.Add(_seriesSuccess);
+            this.chart1.Series.Add(_seriesErrors);
         }
 
         private void saveNetBtn_Click(object sender, EventArgs e)
@@ -167,81 +210,46 @@ namespace test
             bmp.UnlockBits(bmpData);
         }
 
-        public Bitmap Contrast(Bitmap sourceBitmap, int threshold)
+        public void Contrast(Bitmap sourceBitmap, int threshold)
         {
-            BitmapData sourceData = sourceBitmap.LockBits(new Rectangle(0, 0,
-                                        sourceBitmap.Width, sourceBitmap.Height),
-                                        ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
-
-
+            BitmapData sourceData = sourceBitmap.LockBits(new Rectangle(0, 0, sourceBitmap.Width, sourceBitmap.Height), ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
             byte[] pixelBuffer = new byte[sourceData.Stride * sourceData.Height];
 
-
             Marshal.Copy(sourceData.Scan0, pixelBuffer, 0, pixelBuffer.Length);
-
-
             sourceBitmap.UnlockBits(sourceData);
 
-
             double contrastLevel = Math.Pow((100.0 + threshold) / 100.0, 2);
-
-
             double blue = 0;
             double green = 0;
             double red = 0;
 
-
             for (int k = 0; k + 4 < pixelBuffer.Length; k += 4)
             {
-                blue = ((((pixelBuffer[k] / 255.0) - 0.5) *
-                            contrastLevel) + 0.5) * 255.0;
-
-
-                green = ((((pixelBuffer[k + 1] / 255.0) - 0.5) *
-                            contrastLevel) + 0.5) * 255.0;
-
-
-                red = ((((pixelBuffer[k + 2] / 255.0) - 0.5) *
-                            contrastLevel) + 0.5) * 255.0;
-
+                blue = ((((pixelBuffer[k] / 255.0) - 0.5) * contrastLevel) + 0.5) * 255.0;
+                green = ((((pixelBuffer[k + 1] / 255.0) - 0.5) * contrastLevel) + 0.5) * 255.0;
+                red = ((((pixelBuffer[k + 2] / 255.0) - 0.5) * contrastLevel) + 0.5) * 255.0;
 
                 if (blue > 255)
                 { blue = 255; }
                 else if (blue < 0)
                 { blue = 0; }
 
-
                 if (green > 255)
                 { green = 255; }
                 else if (green < 0)
                 { green = 0; }
-
 
                 if (red > 255)
                 { red = 255; }
                 else if (red < 0)
                 { red = 0; }
 
-
                 pixelBuffer[k] = (byte)blue;
                 pixelBuffer[k + 1] = (byte)green;
                 pixelBuffer[k + 2] = (byte)red;
             }
 
-
-            Bitmap resultBitmap = new Bitmap(sourceBitmap.Width, sourceBitmap.Height);
-
-
-            BitmapData resultData = resultBitmap.LockBits(new Rectangle(0, 0,
-                                        resultBitmap.Width, resultBitmap.Height),
-                                        ImageLockMode.WriteOnly, PixelFormat.Format32bppArgb);
-
-
-            Marshal.Copy(pixelBuffer, 0, resultData.Scan0, pixelBuffer.Length);
-            resultBitmap.UnlockBits(resultData);
-
-
-            return resultBitmap;
+            Marshal.Copy(pixelBuffer, 0, sourceData.Scan0, pixelBuffer.Length);
         }
 
         private double[] IntToDoubleArr(int value)
@@ -324,12 +332,12 @@ namespace test
         {
             var c = Generator.Gen(_digitsCount, _heightRange, _lineCount);
             MakeGray(c.Image);
-            var img = Contrast(c.Image, 100);
+            Contrast(c.Image, 100);
 
-            var temp = GetTemp(img);
+            var temp = GetTemp(c.Image);
             var output = _outputFunction.Get(_net, temp);
 
-            pictureBox1.BackgroundImage = img;
+            pictureBox1.BackgroundImage = c.Image;
             captchaResultLabel.Text = output;
         }
 
@@ -352,32 +360,29 @@ namespace test
             });
         }
 
-        private void Learn(bool showLogs = true)
+        private void Learn()
         {
             int success = 0;
-            long i = 0;
+            long iteration = 0;
 
             while (success < _stopSuccess)
             {
-                var err = 0;
+                var errors = 0;
                 var captcha = Generator.Gen(_digitsCount, _heightRange, _lineCount);
 
                 MakeGray(captcha.Image);
-                var img = Contrast(captcha.Image, 100);
+                Contrast(captcha.Image, 100);
 
-                var temp = GetTemp(img);
-                var output = _outputFunction.Get(_net, temp);
-                var fOut = output;
-                Stopwatch sw = new Stopwatch();
+                var temp = GetTemp(captcha.Image);
+                var answer = _outputFunction.Get(_net, temp);
+                var firstAnswer = answer;
 
-                while (output != captcha.Captcha[0].ToString())
+                while (answer != captcha.Captcha[0].ToString())
                 {
-                    sw.Start();
-
                     var res = new List<double>();
 
                     foreach (var dVal in captcha.Captcha[0].ToString()
-                        .Select(codeChar => Convert.ToInt32(codeChar.ToString()))
+                        .Select(x => Convert.ToInt32(x.ToString()))
                         .Select(IntToDoubleArr))
                     {
                         res.AddRange(dVal);
@@ -386,34 +391,34 @@ namespace test
                     var resArr = res.ToArray();
 
                     success = 0;
-                    _net.Corr(temp, resArr, _kLearn);
-                    output = _outputFunction.Get(_net, temp);
-                    err++;
-                    sw.Stop();
 
-                    if (err > 3000)
+                    _net.Correct(temp, resArr, _kLearn);
+                    answer = _outputFunction.Get(_net, temp);
+                    errors++;
+
+                    if (errors > 3000)
                     {
                         break;
                     }
                 }
 
-                if (err == 0)
+                if (errors == 0)
                 {
                     success++;
                 }
 
-                if (showLogs)
+                if (_showLogs)
                 {
-                    BeginInvoke(new EventHandler<LogEventArgs>(ShowLogs), this, new LogEventArgs(i, captcha.Captcha, fOut, err, success, sw.ElapsedMilliseconds));
+                    BeginInvoke(new EventHandler<LogEventArgs>(ShowLogs), this, new LogEventArgs(iteration, captcha.Captcha, firstAnswer, errors, success));
                 }
 
-                i++;
+                iteration++;
             }
         }
 
-        private void LearnBoolType(bool showLogs = true)
+        private void LearnBoolType()
         {
-            if (showLogs)
+            if (_showLogs)
             {
                 resultTextBox.AppendText("Start learn");
             }
@@ -425,7 +430,7 @@ namespace test
             {
                 var err = 0;
 
-                if (showLogs)
+                if (_showLogs)
                 {
                     var myList = resultTextBox.Lines.ToList();
 
@@ -450,7 +455,7 @@ namespace test
                     double[] resArr = { res };
 
                     success = 0;
-                    _net.Corr(temp, resArr, _kLearn);
+                    _net.Correct(temp, resArr, _kLearn);
                     output = _outputFunction.Get(_net, temp);
                     err++;
                     sw.Stop();
@@ -466,17 +471,45 @@ namespace test
                     success++;
                 }
 
-                if (showLogs)
+                if (_showLogs)
                 {
-                    BeginInvoke(new EventHandler<LogEventArgs>(ShowLogs), this, new LogEventArgs(i, captcha.Captcha, fOut, err, success, sw.ElapsedMilliseconds));
+                    BeginInvoke(new EventHandler<LogEventArgs>(ShowLogs), this, new LogEventArgs(i, captcha.Captcha, fOut, err, success));
                 }
 
                 i++;
             }
         }
 
+        private void ShowGraffic(long iteration, int success, int errors)
+        {
+            _succeses = success > _succeses 
+                ? success 
+                : _succeses <= 0 
+                    ? 0 
+                    : _succeses - 1;
+
+            _errors = errors > _errors
+                ? errors
+                : _errors <= 0
+                    ? 0
+                    : _errors - 1;
+
+            if (_seriesStop.Points.Count > 60)
+            {
+                _seriesStop.Points.Remove(_seriesStop.Points.First());
+                _seriesSuccess.Points.Remove(_seriesSuccess.Points.First());
+                _seriesErrors.Points.Remove(_seriesErrors.Points.First());
+            }
+
+            _seriesStop.Points.AddXY(iteration, _stopSuccess);
+            _seriesSuccess.Points.AddXY(iteration, _succeses);
+            _seriesErrors.Points.AddXY(iteration, _errors);
+        }
+
         private void ShowLogs(object sender, LogEventArgs e)
         {
+            ShowGraffic(e.I, e.Success, e.Errors);
+
             var myList = resultTextBox.Lines.ToList();
 
             if (myList.Count > 40)
@@ -484,7 +517,7 @@ namespace test
                 resultTextBox.Clear();
             }
 
-            resultTextBox.AppendText($"{Environment.NewLine}Iter {e.I}: code {e.Captcha} - answer {e.Answer}. errors {e.Errors}, success {e.Success}, time {e.Time}");
+            resultTextBox.AppendText($"{Environment.NewLine}Iter {e.I}: code {e.Captcha} - answer {e.Answer}. errors {e.Errors}, success {e.Success}");
             resultTextBox.SelectionStart = resultTextBox.Text.Length;
             resultTextBox.ScrollToCaret();
         }
@@ -492,6 +525,7 @@ namespace test
         private void stopLearnTextBox_TextChanged(object sender, EventArgs e)
         {
             int.TryParse(stopLearnTextBox.Text, out _stopSuccess);
+            this.chart1.ResetAutoValues();
         }
 
         private void sLearnTextBox_TextChanged(object sender, EventArgs e)
@@ -564,6 +598,16 @@ namespace test
         private void lineCount_ValueChanged(object sender, EventArgs e)
         {
             _lineCount = Convert.ToInt32(lineCount.Value);
+        }
+
+        private void ShowLogsBtn_Click(object sender, EventArgs e)
+        {
+            _showLogs = !_showLogs;
+        }
+
+        private void chart1_DoubleClick(object sender, EventArgs e)
+        {
+            this.chart1.ResetAutoValues();
         }
     }
 }
