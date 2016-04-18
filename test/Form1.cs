@@ -23,7 +23,7 @@ namespace test
         //создаем переменные
         private int _outputNeurons = 4;
         private double _kLearn = 0.01;
-        private double _sLearn = 0.1;
+        private int _sLearn = 1000;
         private int _stopSuccess = 80;
         private double _alpha = 1.0;
         private int _digitsCount = 1;
@@ -416,6 +416,35 @@ namespace test
             }
         }
 
+        private void TestNet()
+        {
+            int errors = 0;
+            long iteration = 0;
+
+            while (iteration < _sLearn)
+            {
+                var captcha = Generator.Gen(_digitsCount, _heightRange, _lineCount);
+
+                MakeGray(captcha.Image);
+                Contrast(captcha.Image, 100);
+
+                var temp = GetTemp(captcha.Image);
+                var answer = _outputFunction.Get(_net, temp);
+
+                if (answer != captcha.Captcha[0].ToString())
+                {
+                    errors++;
+                }
+
+                iteration++;
+            }
+
+            if (_showLogs)
+            {
+                BeginInvoke(new EventHandler<LogEventArgs>(ShowTestNetLogs), this, new LogEventArgs(iteration, string.Empty, string.Empty, errors, 0));
+            }
+        }
+
         private void LearnBoolType()
         {
             if (_showLogs)
@@ -522,6 +551,20 @@ namespace test
             resultTextBox.ScrollToCaret();
         }
 
+        private void ShowTestNetLogs(object sender, LogEventArgs e)
+        {
+            var myList = resultTextBox.Lines.ToList();
+
+            if (myList.Count > 40)
+            {
+                resultTextBox.Clear();
+            }
+
+            resultTextBox.AppendText($"{Environment.NewLine}From {e.I} itertions - {e.Errors} errors");
+            resultTextBox.SelectionStart = resultTextBox.Text.Length;
+            resultTextBox.ScrollToCaret();
+        }
+
         private void stopLearnTextBox_TextChanged(object sender, EventArgs e)
         {
             int.TryParse(stopLearnTextBox.Text, out _stopSuccess);
@@ -530,7 +573,7 @@ namespace test
 
         private void sLearnTextBox_TextChanged(object sender, EventArgs e)
         {
-            double.TryParse(sLearnTextBox.Text, out _sLearn);
+            int.TryParse(sLearnTextBox.Text, out _sLearn);
         }
 
         private void alphaTextBox_TextChanged(object sender, EventArgs e)
@@ -608,6 +651,16 @@ namespace test
         private void chart1_DoubleClick(object sender, EventArgs e)
         {
             this.chart1.ResetAutoValues();
+        }
+
+        private async void TestBtn_Click(object sender, EventArgs e)
+        {
+            resultTextBox.AppendText($"{Environment.NewLine}Start test");
+
+            await Task.Run(() =>
+            {
+                TestNet();
+            });
         }
     }
 }

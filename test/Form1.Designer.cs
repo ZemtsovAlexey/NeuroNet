@@ -77,6 +77,7 @@
             this.GenerateBtn = new System.Windows.Forms.Button();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.tabControl1 = new System.Windows.Forms.TabControl();
+            this.TestBtn = new System.Windows.Forms.Button();
             this.tabPage1.SuspendLayout();
             this.tabControl2.SuspendLayout();
             this.tabPage4.SuspendLayout();
@@ -448,6 +449,7 @@
             // 
             // tabPage3
             // 
+            this.tabPage3.Controls.Add(this.TestBtn);
             this.tabPage3.Controls.Add(this.kLearnTB);
             this.tabPage3.Controls.Add(this.LearnAllBtn);
             this.tabPage3.Controls.Add(this.stopBtn);
@@ -593,6 +595,16 @@
             this.tabControl1.Size = new System.Drawing.Size(995, 733);
             this.tabControl1.TabIndex = 7;
             // 
+            // TestBtn
+            // 
+            this.TestBtn.Location = new System.Drawing.Point(7, 33);
+            this.TestBtn.Name = "TestBtn";
+            this.TestBtn.Size = new System.Drawing.Size(75, 23);
+            this.TestBtn.TabIndex = 56;
+            this.TestBtn.Text = "test";
+            this.TestBtn.UseVisualStyleBackColor = true;
+            this.TestBtn.Click += new System.EventHandler(this.TestBtn_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -673,6 +685,7 @@
         private System.Windows.Forms.TabControl tabControl2;
         private System.Windows.Forms.TabPage tabPage4;
         private System.Windows.Forms.TabPage tabPage5;
+        private System.Windows.Forms.Button TestBtn;
     }
 }
 
