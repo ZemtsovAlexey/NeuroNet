@@ -112,7 +112,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\CaptchaGenerator\CaptchaGenerator\CaptchaGenerator.csproj">
+    <ProjectReference Include="..\CaptchaGenerator2\CaptchaGenerator\CaptchaGenerator.csproj">
       <Project>{806e9737-5cdb-4adb-b89c-317b65c46d73}</Project>
       <Name>CaptchaGenerator</Name>
     </ProjectReference>

@@ -66,7 +66,7 @@ namespace test
             _outputFunction.Count = _digitsCount;
             _outputNeurons = _outputFunction.OutputNeurons;
 
-            var inputSize = 20 * 34;
+            var inputSize = 15 * 23;
             var layers = NetHelpers.GetLayerSizeList(_netSizeX, _netSizeY, _outputNeurons);
 
             _net = new Net(_activationFunction, inputSize, layers.ToArray());
@@ -330,14 +330,12 @@ namespace test
 
         private void GenerateBtn_Click(object sender, EventArgs e)
         {
-            var c = Generator.Gen(_digitsCount, _heightRange, _lineCount);
-            MakeGray(c.Image);
-            Contrast(c.Image, 100);
+            var c = Generator.GenEx(5, _heightRange, _lineCount);
 
-            var temp = GetTemp(c.Image);
+            var temp = GetTemp(c.Blocks[0]);
             var output = _outputFunction.Get(_net, temp);
 
-            pictureBox1.BackgroundImage = c.Image;
+            pictureBox1.BackgroundImage = c.Blocks[0];
             captchaResultLabel.Text = output;
         }
 
@@ -368,51 +366,52 @@ namespace test
             while (success < _stopSuccess)
             {
                 var errors = 0;
-                var captcha = Generator.Gen(_digitsCount, _heightRange, _lineCount);
+                var captcha = Generator.GenEx(5, _heightRange, _lineCount);
 
-                MakeGray(captcha.Image);
-                Contrast(captcha.Image, 100);
-
-                var temp = GetTemp(captcha.Image);
-                var answer = _outputFunction.Get(_net, temp);
-                var firstAnswer = answer;
-
-                while (answer != captcha.Captcha[0].ToString())
+                for (var k = 0; k < captcha.Blocks.Count; k++)
                 {
-                    var res = new List<double>();
+                    var temp = GetTemp(captcha.Blocks[k]);
+                    var answer = _outputFunction.Get(_net, temp);
+                    var firstAnswer = answer;
 
-                    foreach (var dVal in captcha.Captcha[0].ToString()
-                        .Select(x => Convert.ToInt32(x.ToString()))
-                        .Select(IntToDoubleArr))
+                    while (answer != captcha.Captcha[k].ToString())
                     {
-                        res.AddRange(dVal);
+                        var res = new List<double>();
+
+                        foreach (var dVal in captcha.Captcha[k].ToString()
+                            .Select(x => Convert.ToInt32(x.ToString()))
+                            .Select(IntToDoubleArr))
+                        {
+                            res.AddRange(dVal);
+                        }
+
+                        var resArr = res.ToArray();
+
+                        success = 0;
+
+                        _net.Correct(temp, resArr, _kLearn);
+                        answer = _outputFunction.Get(_net, temp);
+                        errors++;
+
+                        if (errors > 3000)
+                        {
+                            break;
+                        }
                     }
 
-                    var resArr = res.ToArray();
-
-                    success = 0;
-
-                    _net.Correct(temp, resArr, _kLearn);
-                    answer = _outputFunction.Get(_net, temp);
-                    errors++;
-
-                    if (errors > 3000)
+                    if (errors == 0)
                     {
-                        break;
+                        success++;
                     }
-                }
 
-                if (errors == 0)
-                {
-                    success++;
-                }
+                    if (_showLogs)
+                    {
+                        BeginInvoke(new EventHandler<LogEventArgs>(ShowLogs), this,
+                            new LogEventArgs(iteration, captcha.Captcha[k].ToString(), firstAnswer, errors, success));
+                    }
 
-                if (_showLogs)
-                {
-                    BeginInvoke(new EventHandler<LogEventArgs>(ShowLogs), this, new LogEventArgs(iteration, captcha.Captcha, firstAnswer, errors, success));
+                    iteration++;
                 }
-
-                iteration++;
             }
         }
 
@@ -421,22 +420,22 @@ namespace test
             int errors = 0;
             long iteration = 0;
 
-            while (iteration < _sLearn)
+            while (iteration < _sLearn / 5)
             {
-                var captcha = Generator.Gen(_digitsCount, _heightRange, _lineCount);
+                var captcha = Generator.GenEx(5, _heightRange, _lineCount);
 
-                MakeGray(captcha.Image);
-                Contrast(captcha.Image, 100);
-
-                var temp = GetTemp(captcha.Image);
-                var answer = _outputFunction.Get(_net, temp);
-
-                if (answer != captcha.Captcha[0].ToString())
+                for (var k = 0; k < captcha.Blocks.Count; k++)
                 {
-                    errors++;
-                }
+                    var temp = GetTemp(captcha.Blocks[k]);
+                    var answer = _outputFunction.Get(_net, temp);
 
-                iteration++;
+                    if (answer != captcha.Captcha[k].ToString())
+                    {
+                        errors++;
+                    }
+
+                    iteration++;
+                }
             }
 
             if (_showLogs)
@@ -515,7 +514,9 @@ namespace test
                 ? success 
                 : _succeses <= 0 
                     ? 0 
-                    : _succeses - 1;
+                    : success == 0 
+                        ? _succeses - 3
+                        : _succeses;
 
             _errors = errors > _errors
                 ? errors
@@ -630,7 +631,7 @@ namespace test
         private void digitsNum_ValueChanged(object sender, EventArgs e)
         {
              _digitsCount = Convert.ToInt32(digitsNum.Value);
-            _outputNeurons = _outputFunction.SizeStek * _digitsCount;
+            //_outputNeurons = _outputFunction.SizeStek * _digitsCount;
         }
 
         private void heightRange_ValueChanged(object sender, EventArgs e)

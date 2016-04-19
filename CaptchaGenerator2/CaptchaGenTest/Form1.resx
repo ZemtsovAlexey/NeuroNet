@@ -117,4 +117,10 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="_urlTbx.Text" xml:space="preserve">
+    <value>http://195.16.122.162/osrweb/UserControls/Captcha.ashx?ClientID=Captcha_ctl00_ContentPlaceHolderBody_TabMain_PanelSearch_CaptchaDigit_ImageCaptcha&amp;FontName=Times+New+Roman&amp;CaptchaColor=%23ececec&amp;ColorLine=%23ececec&amp;ColorBorder=&amp;FontColor=&amp;%D0%A1haracterSet=1234567890&amp;FontSize=18&amp;CaptchaLength=5&amp;%D0%A1aptchaWidth=80&amp;%D0%A1aptchaHeight=34&amp;RandomHeight=4&amp;NumberLine=8&amp;time=07.04.2016%2010:43:01</value>
+  </data>
+  <metadata name="statusStrip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>17, 17</value>
+  </metadata>
 </root>

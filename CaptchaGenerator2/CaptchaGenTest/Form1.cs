@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Drawing;
 using System.Windows.Forms;
 using CaptchaGenerator;
 
@@ -94,6 +96,68 @@ namespace CaptchaGet
             var captchaInfo = Generator.Gen(int.Parse(_lenghtTbx.Text), int.Parse(_heightDurationTbx.Text), int.Parse(_lineCountTbx.Text), int.Parse(_captchaWidthTbx.Text), int.Parse(_captchaHeightTbx.Text), _foneTbx.Text);
             _pictureBox.Image = captchaInfo.Image;
             Text = captchaInfo.Captcha + " - Генератор каптча";
+
+            SplitImageToBlocks(captchaInfo.Image);
+        }
+
+        private void SplitImageToBlocks(Bitmap bitmap)
+        {
+            bool[] isBackColor;
+            List<Bitmap> list = Generator.SplitBlocks(bitmap, ColorTranslator.FromHtml(_foneTbx.Text), int.Parse(_pixelsTbx.Text), out isBackColor);
+            PictureBox[] pbList = new[]
+            {pictureBox1, pictureBox2, pictureBox3, pictureBox4, pictureBox5, pictureBox6, pictureBox7};
+            for (int i = 0; i < list.Count; i++)
+            {
+                if (pbList.Length > i)
+                {
+                    pbList[i].Image = list[i];
+                }
+            }
+            for (int i = list.Count; i < pbList.Length; i++)
+            {
+                pbList[i].Image = new Bitmap(1, 1);
+            }
+
+            _listBox.Items.Clear();
+            for (int i = 0; i < isBackColor.Length; i++)
+            {
+                _listBox.Items.Add(i + " - " + isBackColor[i]);
+            }
+        }
+
+        private void _btnLoad_Click(object sender, EventArgs e)
+        {
+            _pictureBox.Load(_urlTbx.Text);
+            SplitImageToBlocks((Bitmap) _pictureBox.Image);
+        }
+
+        private void pictureBox1_Click(object sender, EventArgs e)
+        {
+            _infoStatusLbl.Text = ((Bitmap) (((PictureBox) sender).Image)).Width.ToString();
+        }
+
+        private void _pixelsTbx_TextChanged(object sender, EventArgs e)
+        {
+            SplitImageToBlocks((Bitmap) _pictureBox.Image);
+        }
+
+        private void _genBtnSimple_Click(object sender, EventArgs e)
+        {
+            var infoEx = Generator.GenEx(int.Parse(_lenghtTbx.Text), int.Parse(_heightDurationTbx.Text), int.Parse(_lineCountTbx.Text), int.Parse(_captchaWidthTbx.Text), int.Parse(_captchaHeightTbx.Text), _foneTbx.Text);
+            List<Bitmap> list = infoEx.Blocks;
+            PictureBox[] pbList = {pictureBox1, pictureBox2, pictureBox3, pictureBox4, pictureBox5, pictureBox6, pictureBox7};
+            for (int i = 0; i < list.Count; i++)
+            {
+                if (pbList.Length > i)
+                {
+                    pbList[i].Image = list[i];
+                }
+            }
+            for (int i = list.Count; i < pbList.Length; i++)
+            {
+                pbList[i].Image = new Bitmap(1, 1);
+            }
+            _listBox.Items.Clear();
         }
     }
 }

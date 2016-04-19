@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.23107.0
+VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "test", "test.csproj", "{4CD39A1A-D256-4C19-BE0C-CBF11E17E809}"
 EndProject
@@ -9,7 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NeuroNet", "..\NeuroNet\Neu
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SearchTest", "SearchTest\SearchTest.csproj", "{447755E3-1894-41D9-8F34-D3736EF55F7C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CaptchaGenerator", "..\CaptchaGenerator\CaptchaGenerator\CaptchaGenerator.csproj", "{806E9737-5CDB-4ADB-B89C-317B65C46D73}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CaptchaGenerator", "..\CaptchaGenerator2\CaptchaGenerator\CaptchaGenerator.csproj", "{806E9737-5CDB-4ADB-B89C-317B65C46D73}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
