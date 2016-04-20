@@ -135,7 +135,7 @@
             this._lineCountTbx.Name = "_lineCountTbx";
             this._lineCountTbx.Size = new System.Drawing.Size(100, 20);
             this._lineCountTbx.TabIndex = 7;
-            this._lineCountTbx.Text = "8";
+            this._lineCountTbx.Text = "12";
             // 
             // label3
             // 
@@ -192,7 +192,7 @@
             this._foneTbx.Name = "_foneTbx";
             this._foneTbx.Size = new System.Drawing.Size(100, 20);
             this._foneTbx.TabIndex = 13;
-            this._foneTbx.Text = "#ececec";
+            this._foneTbx.Text = "#ffffff";
             // 
             // label6
             // 

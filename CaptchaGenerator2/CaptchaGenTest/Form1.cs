@@ -157,21 +157,29 @@ namespace CaptchaGet
 
         private void _genBtnSimple_Click(object sender, EventArgs e)
         {
-            var infoEx = Generator.GenEx(int.Parse(_lenghtTbx.Text), int.Parse(_heightDurationTbx.Text), int.Parse(_lineCountTbx.Text), int.Parse(_captchaWidthTbx.Text), int.Parse(_captchaHeightTbx.Text), _foneTbx.Text);
-            List<Bitmap> list = infoEx.Blocks;
-            PictureBox[] pbList = {pictureBox1, pictureBox2, pictureBox3, pictureBox4, pictureBox5, pictureBox6, pictureBox7};
-            for (int i = 0; i < list.Count; i++)
+            try
             {
-                if (pbList.Length > i)
+                var infoEx = Generator.GenEx(int.Parse(_lenghtTbx.Text), int.Parse(_heightDurationTbx.Text), int.Parse(_lineCountTbx.Text), int.Parse(_captchaWidthTbx.Text), int.Parse(_captchaHeightTbx.Text), _foneTbx.Text);
+                List<Bitmap> list = infoEx.Blocks;
+                PictureBox[] pbList = { pictureBox1, pictureBox2, pictureBox3, pictureBox4, pictureBox5, pictureBox6, pictureBox7 };
+                for (int i = 0; i < list.Count; i++)
                 {
-                    pbList[i].Image = list[i];
+                    if (pbList.Length > i)
+                    {
+                        pbList[i].Image = list[i];
+                    }
                 }
+                for (int i = list.Count; i < pbList.Length; i++)
+                {
+                    pbList[i].Image = new Bitmap(1, 1);
+                }
+                _listBox.Items.Clear();
             }
-            for (int i = list.Count; i < pbList.Length; i++)
+            catch (Exception ex)
             {
-                pbList[i].Image = new Bitmap(1, 1);
+                
+                MessageBox.Show(ex.Message, "Îøèáêà");
             }
-            _listBox.Items.Clear();
         }
     }
 }

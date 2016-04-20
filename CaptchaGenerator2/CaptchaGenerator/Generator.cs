@@ -12,7 +12,7 @@ namespace CaptchaGenerator
     {
         private static readonly string[] RundomColors = {"#0000FF", "#000080", "#008000"};
 
-        public static CaptchaInfo Gen(int stringLength = 5, int randomHeight = 4, int numberLine = 8,
+        public static CaptchaInfo Gen(int stringLength = 5, int randomHeight = 4, int numberLine = 12,
             int captchaWidth = 80, int captchaHeight = 34, string backColor = "#ececec")
         {
             Bitmap bmap = new Bitmap(captchaWidth, captchaHeight);
@@ -55,21 +55,33 @@ namespace CaptchaGenerator
 
                 for (int j = 0; j < rnd.Next(0, numberLine); j++)
                 {
-                    if (rnd.Next(0, 10) > 5)
+                    if (rnd.Next(0, 10) >= 1)
                     {
-                        var y1 = rnd.Next(0, (int) sizes[i].Height/2);
-                        cGrfs[i].DrawLine(new Pen(backGround), rnd.Next(0, (int) sizes[i].Width/2), y1,
-                            rnd.Next((int) sizes[i].Width/2, (int) sizes[i].Width), y1);
+                        var y1 = rnd.Next(0, (int) sizes[i].Height);
+                        cGrfs[i].DrawLine(new Pen(backGround), 
+                            rnd.Next(0, (int) sizes[i].Width / 2), 
+                            y1,
+                            rnd.Next((int)sizes[i].Width / 2, (int) sizes[i].Width), 
+                            y1);
                     }
                     else
                     {
-                        cGrfs[i].DrawLine(new Pen(backGround), rnd.Next(0, (int) sizes[i].Width/2),
+                        var y1 = rnd.Next(0, (int)sizes[i].Height / 2);
+                        var y2 = rnd.Next((int)sizes[i].Height / 2, (int)sizes[i].Height);
+                        cGrfs[i].DrawLine(new Pen(backGround),
+                            rnd.Next(0, (int)sizes[i].Width / 2),
+                            y1,
+                            rnd.Next((int)sizes[i].Width / 2, (int)sizes[i].Width),
+                            y2);
+
+                        /*cGrfs[i].DrawLine(new Pen(backGround), rnd.Next(0, (int) sizes[i].Width/2),
                             rnd.Next(0, (int) sizes[i].Height/2), rnd.Next((int) sizes[i].Width/2, (int) sizes[i].Width),
                             rnd.Next((int) sizes[i].Height/2, (int) sizes[i].Height));
                         /*var x1 = rnd.Next(0, (int) sizes[i].Width);
                         cGrfs[i].DrawLine(new Pen(backGround), x1,
                             rnd.Next(0, (int) sizes[i].Height/2), x1,
                             rnd.Next((int) sizes[i].Height/2, (int) sizes[i].Height));*/
+
                     }
                     //cGrfs[i].DrawLine(new Pen(backGround), rnd.Next(0, (int) sizes[i].Width / 2), rnd.Next(0, (int)sizes[i].Height / 2), rnd.Next((int)sizes[i].Width / 2, (int)sizes[i].Width), rnd.Next((int)sizes[i].Height / 2, (int)sizes[i].Height));
                 }
@@ -92,20 +104,21 @@ namespace CaptchaGenerator
             return new CaptchaInfo(str, bmap);
         }
 
-        public static CaptchaInfoEx GenEx(int stringLength = 5, int randomHeight = 4, int numberLine = 8,
+        public static CaptchaInfoEx GenEx(int stringLength = 5, int randomHeight = 4, int numberLine = 12,
             int captchaWidth = 80, int captchaHeight = 34, string backColor = "#ffffff")
         {
             List<Bitmap> splitBlocks = new List<Bitmap>();
-            CaptchaInfo captchaInfo = null;
+            CaptchaInfo captchaInfo = new CaptchaInfo(null, null);
+            int cicleCount = 0;
 
             while (splitBlocks.Count != stringLength)
             {
                 captchaInfo = Gen(stringLength, randomHeight, numberLine, captchaWidth, captchaHeight, backColor);
                 bool[] isBackColor;
                 splitBlocks = SplitBlocks(captchaInfo.Image, ColorTranslator.FromHtml(backColor), 3, out isBackColor);
+                if(cicleCount++ > 300) throw new Exception("Изображение не разбито на блоки за 300 циклов");
             }
 
-            Debug.Assert(captchaInfo != null, "captchaInfo != null");
             return new CaptchaInfoEx(captchaInfo.Captcha, captchaInfo.Image, splitBlocks);
         }
 
@@ -314,3 +327,4 @@ namespace CaptchaGenerator
         }
     }
 }
+ 
