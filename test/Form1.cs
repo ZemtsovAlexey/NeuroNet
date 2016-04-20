@@ -71,11 +71,11 @@ namespace test
 
             var inputSize = 15 * 23;
             var layers = NetHelpers.GetLayerSizeList(_netSizeX, _netSizeY, _outputNeurons);
-
-            _net = new Net(_activationFunction, inputSize, layers.ToArray());
-            _net2 = new Net(_activationFunction, inputSize, layers.ToArray());
-            _net3 = new Net(_activationFunction, inputSize, layers.ToArray());
-            _net4 = new Net(_activationFunction, inputSize, layers.ToArray());
+            var random = new RandomNumbers();
+            _net = new Net(random, _activationFunction, inputSize, layers.ToArray());
+            _net2 = new Net(random, _activationFunction, inputSize, layers.ToArray());
+            _net3 = new Net(random, _activationFunction, inputSize, layers.ToArray());
+            _net4 = new Net(random, _activationFunction, inputSize, layers.ToArray());
 
             netXTB.Text = _net.SizeX.ToString();
             netYTB.Text = _net.SizeY.ToString();
@@ -366,15 +366,32 @@ namespace test
 
         private void GenerateBtn_Click(object sender, EventArgs e)
         {
-            var c = Generator.GenEx(5, _heightRange, _lineCount);
+            //var list = Generator.GenEx(5, _heightRange, _lineCount).Blocks;
 
-            var temp = GetTemp(c.Blocks[0]);
+            List<Bitmap> list = new List<Bitmap>();
+            int cicleCount = 0;
+
+            while (list.Count != 5)
+            {
+                pictureBox1.Load("http://195.16.122.162/osrweb/UserControls/Captcha.ashx?ClientID=Captcha_ctl00_ContentPlaceHolderBody_TabMain_PanelSearch_CaptchaDigit_ImageCaptcha&FontName=Times+New+Roman&CaptchaColor=%23ececec&ColorLine=%23ececec&ColorBorder=&FontColor=&%D0%A1haracterSet=1234567890&FontSize=18&CaptchaLength=5&%D0%A1aptchaWidth=80&%D0%A1aptchaHeight=34&RandomHeight=4&NumberLine=8&time=07.04.2016%2010:43:01");
+                bool[] isBackColor;
+                list = Generator.SplitBlocks((Bitmap)pictureBox1.Image, ColorTranslator.FromHtml("#ffffff"), 3, out isBackColor);
+                Application.DoEvents();
+                if (cicleCount++ > 20)
+                {
+                    MessageBox.Show("Не разбито на блоки за 20 циклов");
+                    return;
+                }
+            }
+
+            pictureBox1.Image = list[0];
+
+            var temp = GetTemp(list[0]);
             var output = _outputFunction.Get(_net, temp);
             var output2 = _outputFunction.Get(_net2, temp);
             var output3 = _outputFunction.Get(_net3, temp);
             var output4 = _outputFunction.Get(_net4, temp);
 
-            pictureBox1.BackgroundImage = c.Blocks[0];
             captchaResultLabel.Text = output;
             captchaResultLabel2.Text = output2;
             captchaResultLabel3.Text = output3;

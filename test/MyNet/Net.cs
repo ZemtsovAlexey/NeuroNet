@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -19,13 +19,13 @@ namespace test.MyNet
         public int SizeY => Layers.Length;
         public ActivationType ActivationType => _activation.Type;
 
-        public Net(IActivation activation, int x, params int[] layer)
+        public Net(RandomNumbers random, IActivation activation, int x, params int[] layer)
         {
             _activation = activation;
             _layers = new Layer[layer.Length];
             _countLayers = _layers.Length;
 
-            var random = new RandomNumbers();
+            random = random ?? new RandomNumbers();
 
             for (var k = 0; k < layer.Length; k++)
             {
