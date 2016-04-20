@@ -30,12 +30,9 @@ namespace test
         private double _alpha = 1.0;
         private int _digitsCount = 1;
         private int _heightRange = 0;
-        private int _lineCount = 0;
+        private int _lineCount = 8;
         private bool _showLogs = true;
-        private Net _net;
-        private Net _net2;
-        private Net _net3;
-        private Net _net4;
+        private List<Net> _netList;
         private IActivation _activationFunction;
         private IOutput _outputFunction;
         private Series _seriesStop;
@@ -77,16 +74,12 @@ namespace test
             var inputSize = 15 * 23;
             var layers = NetHelpers.GetLayerSizeList(_netSizeX, _netSizeY, _outputNeurons);
             var random = new RandomNumbers();
-            _net = new Net(random, _activationFunction, inputSize, layers.ToArray());
-            _net2 = new Net(random, _activationFunction, inputSize, layers.ToArray());
-            _net3 = new Net(random, _activationFunction, inputSize, layers.ToArray());
-            _net4 = new Net(random, _activationFunction, inputSize, layers.ToArray());
 
-            _network = new ActivationNetwork(new SigmoidFunction(_alpha), inputSize, layers.ToArray());
-            _distanceNetwork = new DistanceNetwork(inputSize, 10);
+            _netList = new List<Net>();
+            _netList.Add(new Net(random, _activationFunction, inputSize, layers.ToArray()));
 
-            netXTB.Text = _net.SizeX.ToString();
-            netYTB.Text = _net.SizeY.ToString();
+            netXTB.Text = _netList.First().SizeX.ToString();
+            netYTB.Text = _netList.First().SizeY.ToString();
 
             chart1.Series.Clear();
 
@@ -132,12 +125,12 @@ namespace test
 
         private void openNetFileDialog_FileOk(object sender, CancelEventArgs e)
         {
-            _net.OpenNw(openFileDialog3.FileName);
+            _netList.First().OpenNw(openFileDialog3.FileName);
             
-            netXTB.Text = _net.SizeX.ToString();
-            netYTB.Text = _net.SizeY.ToString();
+            netXTB.Text = _netList.First().SizeX.ToString();
+            netYTB.Text = _netList.First().SizeY.ToString();
 
-            var activation = _net.ActivationType.ToString();
+            var activation = _netList.First().ActivationType.ToString();
             var rb = ActivationFunctionPanel.Controls.OfType<RadioButton>().FirstOrDefault(r => r.Name == activation);
 
             if (rb != null)
@@ -153,7 +146,11 @@ namespace test
 
         private void openNet2FileDialog_FileOk(object sender, CancelEventArgs e)
         {
-            _net2.OpenNw(openFileDialog1.FileName);
+            var random = new RandomNumbers();
+            var inputSize = 15 * 23;
+            var net = new Net(random, _activationFunction, inputSize, 10);
+            net.OpenNw(openFileDialog1.FileName);
+            _netList.Add(net);
         }
 
         private void loadNet2Btn_Click(object sender, EventArgs e)
@@ -161,29 +158,9 @@ namespace test
             openFileDialog1.ShowDialog();
         }
 
-        private void openNet3FileDialog_FileOk(object sender, CancelEventArgs e)
-        {
-            _net3.OpenNw(openFileDialog3.FileName);
-        }
-
-        private void loadNet3Btn_Click(object sender, EventArgs e)
-        {
-            openFileDialog2.ShowDialog();
-        }
-
-        private void openNet4FileDialog_FileOk(object sender, CancelEventArgs e)
-        {
-            _net4.OpenNw(openFileDialog3.FileName);
-        }
-
-        private void loadNet4Btn_Click(object sender, EventArgs e)
-        {
-            openFileDialog4.ShowDialog();
-        }
-
         private void saveNerFileDialog_FileOk(object sender, CancelEventArgs e)
         {
-            _net.SaveNw(saveFileDialog1.FileName);
+            _netList.First().SaveNw(saveFileDialog1.FileName);
         }
 
         private double[] GetTemp(Bitmap bitmap)
@@ -366,7 +343,7 @@ namespace test
             {
                 for (var i = 0; i < _outputFunction.SizeStek; i++)
                 {
-                    digits[i] = i == value ? 1 : 0;
+                    digits[i] = i == value ? 1 : -1;
                 }
             }
 
@@ -427,15 +404,25 @@ namespace test
             pictureBox1.BackgroundImage = list[0];
 
             var temp = GetTemp(list[0]);
-            var output = _outputFunction.Get(_net, temp);
-            var output2 = _outputFunction.Get(_net2, temp);
-            var output3 = _outputFunction.Get(_net3, temp);
-            var output4 = _outputFunction.GetAForge(_network, temp);
+            var outputList = _netList.Select(net => _outputFunction.Get(net, temp)).ToList();
 
-            captchaResultLabel.Text = output;
-            captchaResultLabel2.Text = output2;
-            captchaResultLabel3.Text = output3;
-            captchaResultLabel4.Text = output4;
+            captchaResultLabel.Text = outputList.GroupBy(x => x).OrderByDescending(x => x.Count()).FirstOrDefault()?.Key;
+
+            resultTextBox.AppendText($"{Environment.NewLine}");
+
+            for (var i = 0; i < outputList.Count; i++)
+            {
+                var myList = resultTextBox.Lines.ToList();
+
+                if (myList.Count > 40)
+                {
+                    resultTextBox.Clear();
+                }
+
+                resultTextBox.AppendText($"{Environment.NewLine}Net {i + 1} - {outputList[i]}");
+                resultTextBox.SelectionStart = resultTextBox.Text.Length;
+                resultTextBox.ScrollToCaret();
+            }
         }
 
         private void button5_Click(object sender, EventArgs e)
@@ -456,20 +443,62 @@ namespace test
                 }
             }
 
-            Blur(list[0]);
-            Contrast(list[0], 100);
+            foreach (var bitmap in list)
+            {
+                Blur(bitmap);
+                Contrast(bitmap, 100);
+            }
+
             pictureBox1.BackgroundImage = list[0];
 
-            var temp = GetTemp(list[0]);
-            var output = _outputFunction.Get(_net, temp);
-            var output2 = _outputFunction.Get(_net2, temp);
-            var output3 = _outputFunction.Get(_net3, temp);
-            var output4 = _outputFunction.GetAForge(_network, temp);
+            var res = new List<string>();
 
-            captchaResultLabel.Text = output;
-            captchaResultLabel2.Text = output2;
-            captchaResultLabel3.Text = output3;
-            captchaResultLabel4.Text = output4;
+            for (var i = 0; i < list.Count; i++)
+            {
+                var t = GetTemp(list[i]);
+                var o = _netList.Select(net => _outputFunction.Get(net, t)).ToList();
+
+                if (i == 0)
+                {
+                    res.AddRange(o);
+                }
+                else
+                {
+                    for (var k = 0; k < o.Count; k++)
+                    {
+                        res[k] += o[k];
+                    }
+                }
+            }
+
+            resultTextBox.AppendText($"{Environment.NewLine}");
+
+            for (var i = 0; i < res.Count; i++)
+            {
+                var myList = resultTextBox.Lines.ToList();
+
+                if (myList.Count > 40)
+                {
+                    resultTextBox.Clear();
+                }
+
+                resultTextBox.AppendText($"{Environment.NewLine}Net {i + 1} - {res[i]}");
+                resultTextBox.SelectionStart = resultTextBox.Text.Length;
+                resultTextBox.ScrollToCaret();
+            }
+
+            string result = null;
+
+            foreach (var bitmap in list)
+            {
+                var t = GetTemp(bitmap);
+                var o = _netList.Select(net => _outputFunction.Get(net, t)).ToList();
+                var answer = o.GroupBy(x => x).OrderByDescending(x => x.Count()).FirstOrDefault()?.Key;
+
+                result += answer;
+            }
+
+            captchaResultLabel.Text = result;
         }
 
         private async void LearnBtn_Click(object sender, EventArgs e)
@@ -493,6 +522,7 @@ namespace test
 
         private void Learn()
         {
+            var net = _netList.First();
             int success = 0;
             long iteration = 0;
 
@@ -506,7 +536,7 @@ namespace test
                     Blur(captcha.Blocks[k]);
                     Contrast(captcha.Blocks[k], 100);
                     var temp = GetTemp(captcha.Blocks[k]);
-                    var answer = _outputFunction.Get(_net, temp);
+                    var answer = _outputFunction.Get(net, temp);
                     var firstAnswer = answer;
                     
                     while (answer != captcha.Captcha[k].ToString())
@@ -523,9 +553,9 @@ namespace test
                         var resArr = res.ToArray();
 
                         success = 0;
-                        
-                        _net.Correct(temp, resArr, _kLearn);
-                        answer = _outputFunction.Get(_net, temp);
+
+                        net.Correct(temp, resArr, _kLearn);
+                        answer = _outputFunction.Get(net, temp);
                         errors++;
 
                         if (errors > 3000)
@@ -654,17 +684,14 @@ namespace test
 
                 for (var k = 0; k < captcha.Blocks.Count; k++)
                 {
-                    var ans = new List<string>();
+                    Blur(captcha.Blocks[k]);
+                    Contrast(captcha.Blocks[k], 100);
 
                     var temp = GetTemp(captcha.Blocks[k]);
-                    ans.Add(_outputFunction.Get(_net, temp));
-                    ans.Add(_outputFunction.Get(_net2, temp));
-                    ans.Add(_outputFunction.Get(_net3, temp));
-                    ans.Add(_outputFunction.Get(_net4, temp));
+                    var outputList = _netList.Select(net => _outputFunction.Get(net, temp)).ToList();
+                    var answer = outputList.GroupBy(x => x).OrderByDescending(x => x.Count()).FirstOrDefault()?.Key;
 
-                    var answer = ans.GroupBy(x => x).OrderByDescending(x => x.Count()).First();
-
-                    if (answer.Key != captcha.Captcha[k].ToString())
+                    if (answer != captcha.Captcha[k].ToString())
                     {
                         errors++;
                     }
@@ -681,6 +708,8 @@ namespace test
 
         private void LearnBoolType()
         {
+            var net = _netList.First();
+
             if (_showLogs)
             {
                 resultTextBox.AppendText("Start learn");
@@ -706,7 +735,7 @@ namespace test
                 var captcha = Generator.Gen(_digitsCount, _heightRange, _lineCount);
 
                 var temp = GetTemp(captcha.Image);
-                var output = _outputFunction.Get(_net, temp);
+                var output = _outputFunction.Get(net, temp);
                 var fOut = output;
                 Stopwatch sw = new Stopwatch();
 
@@ -718,8 +747,8 @@ namespace test
                     double[] resArr = { res };
 
                     success = 0;
-                    _net.Correct(temp, resArr, _kLearn);
-                    output = _outputFunction.Get(_net, temp);
+                    net.Correct(temp, resArr, _kLearn);
+                    output = _outputFunction.Get(net, temp);
                     err++;
                     sw.Stop();
 

@@ -35,9 +35,6 @@
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.button5 = new System.Windows.Forms.Button();
-            this.captchaResultLabel4 = new System.Windows.Forms.Label();
-            this.captchaResultLabel3 = new System.Windows.Forms.Label();
-            this.captchaResultLabel2 = new System.Windows.Forms.Label();
             this.tabControl2 = new System.Windows.Forms.TabControl();
             this.tabPage4 = new System.Windows.Forms.TabPage();
             this.resultTextBox = new System.Windows.Forms.TextBox();
@@ -52,8 +49,6 @@
             this.label8 = new System.Windows.Forms.Label();
             this.settingTabControl = new System.Windows.Forms.TabControl();
             this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.button3 = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
             this.OutputTypePanel = new System.Windows.Forms.Panel();
             this.Bool = new System.Windows.Forms.RadioButton();
@@ -86,8 +81,6 @@
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
-            this.openFileDialog2 = new System.Windows.Forms.OpenFileDialog();
-            this.openFileDialog4 = new System.Windows.Forms.OpenFileDialog();
             this.tabPage1.SuspendLayout();
             this.tabControl2.SuspendLayout();
             this.tabPage4.SuspendLayout();
@@ -117,9 +110,6 @@
             // tabPage1
             // 
             this.tabPage1.Controls.Add(this.button5);
-            this.tabPage1.Controls.Add(this.captchaResultLabel4);
-            this.tabPage1.Controls.Add(this.captchaResultLabel3);
-            this.tabPage1.Controls.Add(this.captchaResultLabel2);
             this.tabPage1.Controls.Add(this.tabControl2);
             this.tabPage1.Controls.Add(this.lineCount);
             this.tabPage1.Controls.Add(this.label9);
@@ -148,33 +138,6 @@
             this.button5.Text = "Generate2";
             this.button5.UseVisualStyleBackColor = true;
             this.button5.Click += new System.EventHandler(this.button5_Click);
-            // 
-            // captchaResultLabel4
-            // 
-            this.captchaResultLabel4.AutoSize = true;
-            this.captchaResultLabel4.Location = new System.Drawing.Point(457, 45);
-            this.captchaResultLabel4.Name = "captchaResultLabel4";
-            this.captchaResultLabel4.Size = new System.Drawing.Size(51, 13);
-            this.captchaResultLabel4.TabIndex = 75;
-            this.captchaResultLabel4.Text = "unknown";
-            // 
-            // captchaResultLabel3
-            // 
-            this.captchaResultLabel3.AutoSize = true;
-            this.captchaResultLabel3.Location = new System.Drawing.Point(458, 28);
-            this.captchaResultLabel3.Name = "captchaResultLabel3";
-            this.captchaResultLabel3.Size = new System.Drawing.Size(51, 13);
-            this.captchaResultLabel3.TabIndex = 74;
-            this.captchaResultLabel3.Text = "unknown";
-            // 
-            // captchaResultLabel2
-            // 
-            this.captchaResultLabel2.AutoSize = true;
-            this.captchaResultLabel2.Location = new System.Drawing.Point(458, 6);
-            this.captchaResultLabel2.Name = "captchaResultLabel2";
-            this.captchaResultLabel2.Size = new System.Drawing.Size(51, 13);
-            this.captchaResultLabel2.TabIndex = 73;
-            this.captchaResultLabel2.Text = "unknown";
             // 
             // tabControl2
             // 
@@ -344,8 +307,6 @@
             // 
             // tabPage2
             // 
-            this.tabPage2.Controls.Add(this.button3);
-            this.tabPage2.Controls.Add(this.button2);
             this.tabPage2.Controls.Add(this.button1);
             this.tabPage2.Controls.Add(this.OutputTypePanel);
             this.tabPage2.Controls.Add(this.ActivationFunctionPanel);
@@ -364,33 +325,13 @@
             this.tabPage2.Text = "Сеть";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
-            // button3
-            // 
-            this.button3.Location = new System.Drawing.Point(231, 84);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(75, 23);
-            this.button3.TabIndex = 66;
-            this.button3.Text = "load 4";
-            this.button3.UseVisualStyleBackColor = true;
-            this.button3.Click += new System.EventHandler(this.loadNet4Btn_Click);
-            // 
-            // button2
-            // 
-            this.button2.Location = new System.Drawing.Point(231, 58);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(75, 23);
-            this.button2.TabIndex = 65;
-            this.button2.Text = "load 3";
-            this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.loadNet3Btn_Click);
-            // 
             // button1
             // 
             this.button1.Location = new System.Drawing.Point(231, 33);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 23);
             this.button1.TabIndex = 64;
-            this.button1.Text = "load 2";
+            this.button1.Text = "load new";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.loadNet2Btn_Click);
             // 
@@ -473,7 +414,7 @@
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(75, 23);
             this.button4.TabIndex = 43;
-            this.button4.Text = "load";
+            this.button4.Text = "load first";
             this.button4.UseVisualStyleBackColor = true;
             this.button4.Click += new System.EventHandler(this.loadNetBtn_Click);
             // 
@@ -694,16 +635,6 @@
             this.openFileDialog1.FileName = "openFileDialog2";
             this.openFileDialog1.FileOk += new System.ComponentModel.CancelEventHandler(this.openNet2FileDialog_FileOk);
             // 
-            // openFileDialog2
-            // 
-            this.openFileDialog2.FileName = "openFileDialog2";
-            this.openFileDialog2.FileOk += new System.ComponentModel.CancelEventHandler(this.openNet3FileDialog_FileOk);
-            // 
-            // openFileDialog4
-            // 
-            this.openFileDialog4.FileName = "openFileDialog2";
-            this.openFileDialog4.FileOk += new System.ComponentModel.CancelEventHandler(this.openNet4FileDialog_FileOk);
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -785,15 +716,8 @@
         private System.Windows.Forms.TabPage tabPage4;
         private System.Windows.Forms.TabPage tabPage5;
         private System.Windows.Forms.Button TestBtn;
-        private System.Windows.Forms.Button button3;
-        private System.Windows.Forms.Button button2;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
-        private System.Windows.Forms.OpenFileDialog openFileDialog2;
-        private System.Windows.Forms.OpenFileDialog openFileDialog4;
-        private System.Windows.Forms.Label captchaResultLabel4;
-        private System.Windows.Forms.Label captchaResultLabel3;
-        private System.Windows.Forms.Label captchaResultLabel2;
         private System.Windows.Forms.Button button5;
     }
 }
