@@ -127,7 +127,21 @@ namespace CaptchaGet
 
         private void _btnLoad_Click(object sender, EventArgs e)
         {
-            _pictureBox.Load(_urlTbx.Text);
+            List<Bitmap> list = new List<Bitmap>();
+            int cicleCount = 0;
+
+            while (list.Count != 5)
+            {
+                _pictureBox.Load(_urlTbx.Text);
+                bool[] isBackColor;
+                list = Generator.SplitBlocks((Bitmap) _pictureBox.Image, ColorTranslator.FromHtml(_foneTbx.Text), int.Parse(_pixelsTbx.Text), out isBackColor);
+                Application.DoEvents();
+                if (cicleCount++ > 20)
+                {
+                    MessageBox.Show("Не разбито на блоки за 20 циклов");
+                    return;
+                }
+            }
             SplitImageToBlocks((Bitmap) _pictureBox.Image);
         }
 
