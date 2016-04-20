@@ -9,6 +9,8 @@ using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Forms.DataVisualization.Charting;
+using AForge.Neuro;
+using AForge.Neuro.Learning;
 using CaptchaGenerator;
 using test.Extensions;
 using test.Helpers;
@@ -41,6 +43,7 @@ namespace test
         private Series _seriesErrors;
         private int _succeses;
         private int _errors;
+        private ActivationNetwork _network;
 
         private int _netSizeX = 15;
         private int _netSizeY = 10;
@@ -65,6 +68,7 @@ namespace test
             var outputType = GetOutputType();
 
             _activationFunction = ActivationFactory.Get(activationType);
+            _activationFunction.Alfa = _alpha;
             _outputFunction = OutputFactory.Get(outputType);
             _outputFunction.Count = _digitsCount;
             _outputNeurons = _outputFunction.OutputNeurons;
@@ -76,6 +80,8 @@ namespace test
             _net2 = new Net(random, _activationFunction, inputSize, layers.ToArray());
             _net3 = new Net(random, _activationFunction, inputSize, layers.ToArray());
             _net4 = new Net(random, _activationFunction, inputSize, layers.ToArray());
+
+            _network = new ActivationNetwork(new BipolarSigmoidFunction(_alpha), inputSize, layers.ToArray());
 
             netXTB.Text = _net.SizeX.ToString();
             netYTB.Text = _net.SizeY.ToString();
@@ -312,7 +318,7 @@ namespace test
             {
                 for (var i = 0; i < _outputFunction.SizeStek; i++)
                 {
-                    digits[i] = i == value ? 0.5 : 0;
+                    digits[i] = i == value ? 1 : 0;
                 }
             }
 
@@ -390,7 +396,7 @@ namespace test
             var output = _outputFunction.Get(_net, temp);
             var output2 = _outputFunction.Get(_net2, temp);
             var output3 = _outputFunction.Get(_net3, temp);
-            var output4 = _outputFunction.Get(_net4, temp);
+            var output4 = _outputFunction.GetAForge(_network, temp);
 
             captchaResultLabel.Text = output;
             captchaResultLabel2.Text = output2;
@@ -412,7 +418,7 @@ namespace test
                 }
                 else
                 {
-                    Learn();
+                    LearnAForge();
                 }
             });
         }
@@ -433,6 +439,10 @@ namespace test
                     var answer = _outputFunction.Get(_net, temp);
                     var firstAnswer = answer;
 
+                    // create teacher
+                    BackPropagationLearning teacher = new BackPropagationLearning(_network);
+                    var a =_network.Compute(temp);
+
                     while (answer != captcha.Captcha[k].ToString())
                     {
                         var res = new List<double>();
@@ -448,6 +458,8 @@ namespace test
 
                         success = 0;
 
+                        var b = teacher.Run(temp, resArr);
+                        var a2 = _network.Compute(temp);
                         _net.Correct(temp, resArr, _kLearn);
                         answer = _outputFunction.Get(_net, temp);
                         errors++;
@@ -456,6 +468,69 @@ namespace test
                         {
                             break;
                         }
+                    }
+
+                    if (errors == 0)
+                    {
+                        success++;
+                    }
+
+                    if (_showLogs)
+                    {
+                        BeginInvoke(new EventHandler<LogEventArgs>(ShowLogs), this,
+                            new LogEventArgs(iteration, captcha.Captcha[k].ToString(), firstAnswer, errors, success));
+                    }
+
+                    iteration++;
+                }
+            }
+        }
+
+        private void LearnAForge()
+        {
+            int success = 0;
+            long iteration = 0;
+
+            while (success < _stopSuccess)
+            {
+                var errors = 0;
+                var captcha = Generator.GenEx(5, _heightRange, _lineCount);
+
+                for (var k = 0; k < captcha.Blocks.Count; k++)
+                {
+                    var temp = GetTemp(captcha.Blocks[k]);
+                    var answer = _outputFunction.GetAForge(_network, temp);
+                    var firstAnswer = answer;
+
+                    // create teacher
+                    BackPropagationLearning teacher = new BackPropagationLearning(_network);
+                    teacher.Momentum = 0.0;
+                    teacher.LearningRate = _kLearn;
+                    double e = 0;
+
+                    while (answer != captcha.Captcha[k].ToString())
+                    {
+                        var res = new List<double>();
+
+                        foreach (var dVal in captcha.Captcha[k].ToString()
+                            .Select(x => Convert.ToInt32(x.ToString()))
+                            .Select(IntToDoubleArr))
+                        {
+                            res.AddRange(dVal);
+                        }
+
+                        var resArr = res.ToArray();
+
+                        success = 0;
+
+                        e = teacher.Run(temp, resArr);
+                        answer = _outputFunction.GetAForge(_network, temp);
+                        errors++;
+
+                        //if (errors > 3000)
+                        //{
+                        //    break;
+                        //}
                     }
 
                     if (errors == 0)
@@ -515,10 +590,17 @@ namespace test
 
                 for (var k = 0; k < captcha.Blocks.Count; k++)
                 {
-                    var temp = GetTemp(captcha.Blocks[k]);
-                    var answer = _outputFunction.Get(_net, temp);
+                    var ans = new List<string>();
 
-                    if (answer != captcha.Captcha[k].ToString())
+                    var temp = GetTemp(captcha.Blocks[k]);
+                    ans.Add(_outputFunction.Get(_net, temp));
+                    ans.Add(_outputFunction.Get(_net2, temp));
+                    ans.Add(_outputFunction.Get(_net3, temp));
+                    ans.Add(_outputFunction.Get(_net4, temp));
+
+                    var answer = ans.GroupBy(x => x).OrderByDescending(x => x.Count()).First();
+
+                    if (answer.Key != captcha.Captcha[k].ToString())
                     {
                         errors++;
                     }
@@ -669,6 +751,7 @@ namespace test
         private void alphaTextBox_TextChanged(object sender, EventArgs e)
         {
             double.TryParse(alphaTextBox.Text, out _alpha);
+            //_activationFunction.Alfa = _alpha;
         }
 
         private void stopBtn_Click(object sender, EventArgs e)

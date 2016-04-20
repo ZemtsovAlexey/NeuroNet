@@ -1,5 +1,6 @@
-﻿using System;
+using System;
 using System.Linq;
+using AForge.Neuro;
 using test.MyNet;
 
 namespace test.Helpers.Output
@@ -40,6 +41,11 @@ namespace test.Helpers.Output
             }
 
             return res;
+        }
+
+        public string GetAForge(ActivationNetwork net, double[] input)
+        {
+            throw new NotImplementedException();
         }
     }
 }

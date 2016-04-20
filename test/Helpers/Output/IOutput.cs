@@ -1,4 +1,5 @@
-﻿using test.MyNet;
+using AForge.Neuro;
+using test.MyNet;
 
 namespace test.Helpers.Output
 {
@@ -11,5 +12,7 @@ namespace test.Helpers.Output
         int Count { get; set; }
 
         string Get(Net net, double[] input);
+
+        string GetAForge(ActivationNetwork net, double[] input);
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Linq;
+using System.Linq;
+using AForge.Neuro;
 using test.MyNet;
 
 namespace test.Helpers.Output
@@ -29,6 +30,36 @@ namespace test.Helpers.Output
         {
             string res = null;
             var output = net.GetOut(input);
+
+            for (int i = 0; i < OutputNeurons / SizeStek; i++)
+            {
+                int maxIter = 0;
+                double maxRes = 0;
+
+                var part = output.ToList().Skip(i * SizeStek).Take(SizeStek);
+                var k = 0;
+
+                foreach (var neuron in part)
+                {
+                    if (maxRes < neuron)
+                    {
+                        maxRes = neuron;
+                        maxIter = k;
+                    }
+
+                    k++;
+                }
+
+                res += maxIter.ToString();
+            }
+
+            return res;
+        }
+
+        public string GetAForge(ActivationNetwork net, double[] input)
+        {
+            string res = null;
+            var output = net.Compute(input);
 
             for (int i = 0; i < OutputNeurons / SizeStek; i++)
             {
