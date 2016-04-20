@@ -420,7 +420,26 @@ namespace test
 
         private void GenerateBtn_Click(object sender, EventArgs e)
         {
+            var list = Generator.GenEx(5, _heightRange, _lineCount).Blocks;
 
+            Blur(list[0]);
+            Contrast(list[0], 100);
+            pictureBox1.BackgroundImage = list[0];
+
+            var temp = GetTemp(list[0]);
+            var output = _outputFunction.Get(_net, temp);
+            var output2 = _outputFunction.Get(_net2, temp);
+            var output3 = _outputFunction.Get(_net3, temp);
+            var output4 = _outputFunction.GetAForge(_network, temp);
+
+            captchaResultLabel.Text = output;
+            captchaResultLabel2.Text = output2;
+            captchaResultLabel3.Text = output3;
+            captchaResultLabel4.Text = output4;
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
             List<Bitmap> list = new List<Bitmap>();
             int cicleCount = 0;
 
@@ -437,11 +456,9 @@ namespace test
                 }
             }
 
-            //var list = Generator.GenEx(5, _heightRange, _lineCount).Blocks;
-
             Blur(list[0]);
             Contrast(list[0], 100);
-            pictureBox1.Image = list[0];
+            pictureBox1.BackgroundImage = list[0];
 
             var temp = GetTemp(list[0]);
             var output = _outputFunction.Get(_net, temp);
@@ -486,6 +503,8 @@ namespace test
 
                 for (var k = 0; k < captcha.Blocks.Count; k++)
                 {
+                    Blur(captcha.Blocks[k]);
+                    Contrast(captcha.Blocks[k], 100);
                     var temp = GetTemp(captcha.Blocks[k]);
                     var answer = _outputFunction.Get(_net, temp);
                     var firstAnswer = answer;

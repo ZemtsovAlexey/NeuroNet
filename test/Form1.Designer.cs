@@ -34,6 +34,10 @@
             this.openFileDialog3 = new System.Windows.Forms.OpenFileDialog();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.button5 = new System.Windows.Forms.Button();
+            this.captchaResultLabel4 = new System.Windows.Forms.Label();
+            this.captchaResultLabel3 = new System.Windows.Forms.Label();
+            this.captchaResultLabel2 = new System.Windows.Forms.Label();
             this.tabControl2 = new System.Windows.Forms.TabControl();
             this.tabPage4 = new System.Windows.Forms.TabPage();
             this.resultTextBox = new System.Windows.Forms.TextBox();
@@ -84,9 +88,6 @@
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.openFileDialog2 = new System.Windows.Forms.OpenFileDialog();
             this.openFileDialog4 = new System.Windows.Forms.OpenFileDialog();
-            this.captchaResultLabel2 = new System.Windows.Forms.Label();
-            this.captchaResultLabel3 = new System.Windows.Forms.Label();
-            this.captchaResultLabel4 = new System.Windows.Forms.Label();
             this.tabPage1.SuspendLayout();
             this.tabControl2.SuspendLayout();
             this.tabPage4.SuspendLayout();
@@ -115,6 +116,7 @@
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.button5);
             this.tabPage1.Controls.Add(this.captchaResultLabel4);
             this.tabPage1.Controls.Add(this.captchaResultLabel3);
             this.tabPage1.Controls.Add(this.captchaResultLabel2);
@@ -136,6 +138,43 @@
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "tabPage1";
             this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // button5
+            // 
+            this.button5.Location = new System.Drawing.Point(237, 39);
+            this.button5.Name = "button5";
+            this.button5.Size = new System.Drawing.Size(75, 23);
+            this.button5.TabIndex = 76;
+            this.button5.Text = "Generate2";
+            this.button5.UseVisualStyleBackColor = true;
+            this.button5.Click += new System.EventHandler(this.button5_Click);
+            // 
+            // captchaResultLabel4
+            // 
+            this.captchaResultLabel4.AutoSize = true;
+            this.captchaResultLabel4.Location = new System.Drawing.Point(457, 45);
+            this.captchaResultLabel4.Name = "captchaResultLabel4";
+            this.captchaResultLabel4.Size = new System.Drawing.Size(51, 13);
+            this.captchaResultLabel4.TabIndex = 75;
+            this.captchaResultLabel4.Text = "unknown";
+            // 
+            // captchaResultLabel3
+            // 
+            this.captchaResultLabel3.AutoSize = true;
+            this.captchaResultLabel3.Location = new System.Drawing.Point(458, 28);
+            this.captchaResultLabel3.Name = "captchaResultLabel3";
+            this.captchaResultLabel3.Size = new System.Drawing.Size(51, 13);
+            this.captchaResultLabel3.TabIndex = 74;
+            this.captchaResultLabel3.Text = "unknown";
+            // 
+            // captchaResultLabel2
+            // 
+            this.captchaResultLabel2.AutoSize = true;
+            this.captchaResultLabel2.Location = new System.Drawing.Point(458, 6);
+            this.captchaResultLabel2.Name = "captchaResultLabel2";
+            this.captchaResultLabel2.Size = new System.Drawing.Size(51, 13);
+            this.captchaResultLabel2.TabIndex = 73;
+            this.captchaResultLabel2.Text = "unknown";
             // 
             // tabControl2
             // 
@@ -622,7 +661,7 @@
             // 
             // GenerateBtn
             // 
-            this.GenerateBtn.Location = new System.Drawing.Point(377, 6);
+            this.GenerateBtn.Location = new System.Drawing.Point(237, 6);
             this.GenerateBtn.Name = "GenerateBtn";
             this.GenerateBtn.Size = new System.Drawing.Size(75, 23);
             this.GenerateBtn.TabIndex = 5;
@@ -633,11 +672,11 @@
             // pictureBox1
             // 
             this.pictureBox1.BackColor = System.Drawing.SystemColors.ButtonFace;
-            this.pictureBox1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.pictureBox1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.pictureBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.pictureBox1.Location = new System.Drawing.Point(6, 6);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(365, 139);
+            this.pictureBox1.Size = new System.Drawing.Size(225, 139);
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
             // 
@@ -664,33 +703,6 @@
             // 
             this.openFileDialog4.FileName = "openFileDialog2";
             this.openFileDialog4.FileOk += new System.ComponentModel.CancelEventHandler(this.openNet4FileDialog_FileOk);
-            // 
-            // captchaResultLabel2
-            // 
-            this.captchaResultLabel2.AutoSize = true;
-            this.captchaResultLabel2.Location = new System.Drawing.Point(458, 6);
-            this.captchaResultLabel2.Name = "captchaResultLabel2";
-            this.captchaResultLabel2.Size = new System.Drawing.Size(51, 13);
-            this.captchaResultLabel2.TabIndex = 73;
-            this.captchaResultLabel2.Text = "unknown";
-            // 
-            // captchaResultLabel3
-            // 
-            this.captchaResultLabel3.AutoSize = true;
-            this.captchaResultLabel3.Location = new System.Drawing.Point(458, 28);
-            this.captchaResultLabel3.Name = "captchaResultLabel3";
-            this.captchaResultLabel3.Size = new System.Drawing.Size(51, 13);
-            this.captchaResultLabel3.TabIndex = 74;
-            this.captchaResultLabel3.Text = "unknown";
-            // 
-            // captchaResultLabel4
-            // 
-            this.captchaResultLabel4.AutoSize = true;
-            this.captchaResultLabel4.Location = new System.Drawing.Point(457, 45);
-            this.captchaResultLabel4.Name = "captchaResultLabel4";
-            this.captchaResultLabel4.Size = new System.Drawing.Size(51, 13);
-            this.captchaResultLabel4.TabIndex = 75;
-            this.captchaResultLabel4.Text = "unknown";
             // 
             // Form1
             // 
@@ -782,6 +794,7 @@
         private System.Windows.Forms.Label captchaResultLabel4;
         private System.Windows.Forms.Label captchaResultLabel3;
         private System.Windows.Forms.Label captchaResultLabel2;
+        private System.Windows.Forms.Button button5;
     }
 }
 
