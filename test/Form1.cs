@@ -31,6 +31,9 @@ namespace test
         private int _lineCount = 0;
         private bool _showLogs = true;
         private Net _net;
+        private Net _net2;
+        private Net _net3;
+        private Net _net4;
         private IActivation _activationFunction;
         private IOutput _outputFunction;
         private Series _seriesStop;
@@ -70,6 +73,9 @@ namespace test
             var layers = NetHelpers.GetLayerSizeList(_netSizeX, _netSizeY, _outputNeurons);
 
             _net = new Net(_activationFunction, inputSize, layers.ToArray());
+            _net2 = new Net(_activationFunction, inputSize, layers.ToArray());
+            _net3 = new Net(_activationFunction, inputSize, layers.ToArray());
+            _net4 = new Net(_activationFunction, inputSize, layers.ToArray());
 
             netXTB.Text = _net.SizeX.ToString();
             netYTB.Text = _net.SizeY.ToString();
@@ -119,7 +125,7 @@ namespace test
         private void openNetFileDialog_FileOk(object sender, CancelEventArgs e)
         {
             _net.OpenNw(openFileDialog3.FileName);
-
+            
             netXTB.Text = _net.SizeX.ToString();
             netYTB.Text = _net.SizeY.ToString();
 
@@ -135,6 +141,36 @@ namespace test
         private void loadNetBtn_Click(object sender, EventArgs e)
         {
             openFileDialog3.ShowDialog();
+        }
+
+        private void openNet2FileDialog_FileOk(object sender, CancelEventArgs e)
+        {
+            _net2.OpenNw(openFileDialog1.FileName);
+        }
+
+        private void loadNet2Btn_Click(object sender, EventArgs e)
+        {
+            openFileDialog1.ShowDialog();
+        }
+
+        private void openNet3FileDialog_FileOk(object sender, CancelEventArgs e)
+        {
+            _net3.OpenNw(openFileDialog3.FileName);
+        }
+
+        private void loadNet3Btn_Click(object sender, EventArgs e)
+        {
+            openFileDialog2.ShowDialog();
+        }
+
+        private void openNet4FileDialog_FileOk(object sender, CancelEventArgs e)
+        {
+            _net4.OpenNw(openFileDialog3.FileName);
+        }
+
+        private void loadNet4Btn_Click(object sender, EventArgs e)
+        {
+            openFileDialog4.ShowDialog();
         }
 
         private void saveNerFileDialog_FileOk(object sender, CancelEventArgs e)
@@ -334,9 +370,15 @@ namespace test
 
             var temp = GetTemp(c.Blocks[0]);
             var output = _outputFunction.Get(_net, temp);
+            var output2 = _outputFunction.Get(_net2, temp);
+            var output3 = _outputFunction.Get(_net3, temp);
+            var output4 = _outputFunction.Get(_net4, temp);
 
             pictureBox1.BackgroundImage = c.Blocks[0];
             captchaResultLabel.Text = output;
+            captchaResultLabel2.Text = output2;
+            captchaResultLabel3.Text = output3;
+            captchaResultLabel4.Text = output4;
         }
 
         private async void LearnBtn_Click(object sender, EventArgs e)
@@ -414,6 +456,36 @@ namespace test
                 }
             }
         }
+
+        //private void LearnNet(Net net, double[] temp, string captchaAnser)
+        //{
+        //    var answer = _outputFunction.Get(_net, temp);
+
+        //    while (answer != captchaAnser)
+        //    {
+        //        var res = new List<double>();
+
+        //        foreach (var dVal in captchaAnser
+        //            .Select(x => Convert.ToInt32(x.ToString()))
+        //            .Select(IntToDoubleArr))
+        //        {
+        //            res.AddRange(dVal);
+        //        }
+
+        //        var resArr = res.ToArray();
+
+        //        success = 0;
+
+        //        _net.Correct(temp, resArr, _kLearn);
+        //        answer = _outputFunction.Get(_net, temp);
+        //        errors++;
+
+        //        if (errors > 3000)
+        //        {
+        //            break;
+        //        }
+        //    }
+        //}
 
         private void TestNet()
         {
