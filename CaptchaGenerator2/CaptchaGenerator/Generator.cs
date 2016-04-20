@@ -10,6 +10,7 @@ namespace CaptchaGenerator
 {
     public static class Generator
     {
+        private static Random rndFont = new Random();
         private static readonly string[] RundomColors = {"#0000FF", "#000080", "#008000"};
 
         public static CaptchaInfo Gen(int stringLength = 5, int randomHeight = 4, int numberLine = 12,
@@ -19,9 +20,13 @@ namespace CaptchaGenerator
             Graphics grfs = Graphics.FromImage(bmap);
             var backGround = ColorTranslator.FromHtml(backColor);
             grfs.Clear(backGround);
-            Font fnt = new Font("Times New Roman", 17, FontStyle.Bold);
+
+
+            var r = rndFont.Next(1, 3);
+            Font fnt = r == 1 ? new Font("Times New Roman", 17, FontStyle.Bold) : new Font("Times New Roman", 19, FontStyle.Bold);
 
             Random rnd = new Random();
+
             //grfs.DrawLine(Pens.Black, rnd.Next(0, 50), rnd.Next(10, 30), rnd.Next(0, 200), rnd.Next(0, 50));
             //grfs.DrawRectangle(Pens.Blue, rnd.Next(0, 20), rnd.Next(0, 20), rnd.Next(50, 80), rnd.Next(0, 20));
             //grfs.DrawLine(Pens.Red, rnd.Next(0, 50), rnd.Next(10, 30), rnd.Next(0, 200), rnd.Next(0, 20));

@@ -44,6 +44,7 @@ namespace test
         private int _succeses;
         private int _errors;
         private ActivationNetwork _network;
+        private DistanceNetwork _distanceNetwork;
 
         private int _netSizeX = 15;
         private int _netSizeY = 10;
@@ -81,7 +82,8 @@ namespace test
             _net3 = new Net(random, _activationFunction, inputSize, layers.ToArray());
             _net4 = new Net(random, _activationFunction, inputSize, layers.ToArray());
 
-            _network = new ActivationNetwork(new BipolarSigmoidFunction(_alpha), inputSize, layers.ToArray());
+            _network = new ActivationNetwork(new SigmoidFunction(_alpha), inputSize, layers.ToArray());
+            _distanceNetwork = new DistanceNetwork(inputSize, 10);
 
             netXTB.Text = _net.SizeX.ToString();
             netYTB.Text = _net.SizeY.ToString();
@@ -294,6 +296,52 @@ namespace test
             Marshal.Copy(pixelBuffer, 0, sourceData.Scan0, pixelBuffer.Length);
         }
 
+        private void Blur(Bitmap bm)
+        {
+            int w = bm.Width;
+            int h = bm.Height;
+
+            // horizontal blur
+            for (int i = 1; i < w - 1; i++)
+                for (int j = 0; j < h; j++)
+                {
+                    Color c1 = bm.GetPixel(i - 1, j);
+                    Color c2 = bm.GetPixel(i, j);
+                    Color c3 = bm.GetPixel(i + 1, j);
+
+
+                    byte bR = (byte)((c1.R + c2.R + c3.R) / 3);
+                    byte bG = (byte)((c1.G + c2.G + c3.G) / 3);
+                    byte bB = (byte)((c1.B + c2.B + c3.B) / 3);
+
+
+                    Color cBlured = Color.FromArgb(bR, bG, bB);
+
+                    bm.SetPixel(i, j, cBlured);
+
+                }
+
+            //vertical blur
+            for (int i = 0; i < w; i++)
+                for (int j = 1; j < h - 1; j++)
+                {
+                    Color c1 = bm.GetPixel(i, j - 1);
+                    Color c2 = bm.GetPixel(i, j);
+                    Color c3 = bm.GetPixel(i, j + 1);
+
+
+                    byte bR = (byte)((c1.R + c2.R + c3.R) / 3);
+                    byte bG = (byte)((c1.G + c2.G + c3.G) / 3);
+                    byte bB = (byte)((c1.B + c2.B + c3.B) / 3);
+
+
+                    Color cBlured = Color.FromArgb(bR, bG, bB);
+
+                    bm.SetPixel(i, j, cBlured);
+
+                }
+        }
+
         private double[] IntToDoubleArr(int value)
         {
             double[] digits = new double[_outputFunction.SizeStek];
@@ -372,7 +420,6 @@ namespace test
 
         private void GenerateBtn_Click(object sender, EventArgs e)
         {
-            //var list = Generator.GenEx(5, _heightRange, _lineCount).Blocks;
 
             List<Bitmap> list = new List<Bitmap>();
             int cicleCount = 0;
@@ -390,6 +437,10 @@ namespace test
                 }
             }
 
+            //var list = Generator.GenEx(5, _heightRange, _lineCount).Blocks;
+
+            Blur(list[0]);
+            Contrast(list[0], 100);
             pictureBox1.Image = list[0];
 
             var temp = GetTemp(list[0]);
@@ -418,7 +469,7 @@ namespace test
                 }
                 else
                 {
-                    LearnAForge();
+                    Learn();
                 }
             });
         }
@@ -438,11 +489,7 @@ namespace test
                     var temp = GetTemp(captcha.Blocks[k]);
                     var answer = _outputFunction.Get(_net, temp);
                     var firstAnswer = answer;
-
-                    // create teacher
-                    BackPropagationLearning teacher = new BackPropagationLearning(_network);
-                    var a =_network.Compute(temp);
-
+                    
                     while (answer != captcha.Captcha[k].ToString())
                     {
                         var res = new List<double>();
@@ -457,9 +504,7 @@ namespace test
                         var resArr = res.ToArray();
 
                         success = 0;
-
-                        var b = teacher.Run(temp, resArr);
-                        var a2 = _network.Compute(temp);
+                        
                         _net.Correct(temp, resArr, _kLearn);
                         answer = _outputFunction.Get(_net, temp);
                         errors++;
@@ -503,8 +548,8 @@ namespace test
                     var firstAnswer = answer;
 
                     // create teacher
-                    BackPropagationLearning teacher = new BackPropagationLearning(_network);
-                    teacher.Momentum = 0.0;
+                    var teacher = new BackPropagationLearning(_network);
+                    //teacher.Momentum = 0.0;
                     teacher.LearningRate = _kLearn;
                     double e = 0;
 
