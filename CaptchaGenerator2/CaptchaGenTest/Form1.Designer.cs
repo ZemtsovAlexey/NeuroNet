@@ -84,11 +84,13 @@
             // 
             this._pictureBox.BackColor = System.Drawing.SystemColors.ButtonHighlight;
             this._pictureBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this._pictureBox.Cursor = System.Windows.Forms.Cursors.Cross;
             this._pictureBox.Location = new System.Drawing.Point(12, 12);
             this._pictureBox.Name = "_pictureBox";
             this._pictureBox.Size = new System.Drawing.Size(164, 56);
             this._pictureBox.TabIndex = 1;
             this._pictureBox.TabStop = false;
+            this._pictureBox.MouseClick += new System.Windows.Forms.MouseEventHandler(this._pictureBox_MouseClick);
             // 
             // label1
             // 

@@ -141,7 +141,9 @@ namespace CaptchaGet
                     MessageBox.Show("Не разбито на блоки за 20 циклов");
                     return;
                 }
+                break;
             }
+            _infoStatusLbl.Text = "Циклов распознания: " + cicleCount;
             SplitImageToBlocks((Bitmap) _pictureBox.Image);
         }
 
@@ -174,12 +176,25 @@ namespace CaptchaGet
                     pbList[i].Image = new Bitmap(1, 1);
                 }
                 _listBox.Items.Clear();
+                _infoStatusLbl.Text = infoEx.TryCount.ToString();
             }
             catch (Exception ex)
             {
                 
                 MessageBox.Show(ex.Message, "Ошибка");
             }
+        }
+
+        private void _pictureBox_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (e.X >= _pictureBox.Image.Width || e.Y >= _pictureBox.Image.Height)
+            {
+                return;
+            }
+
+            Bitmap b = new Bitmap(_pictureBox.Image);
+            Color color = b.GetPixel(e.X, e.Y);
+            _foneTbx.Text = ColorTranslator.ToHtml(color);
         }
     }
 }

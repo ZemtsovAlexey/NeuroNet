@@ -45,6 +45,7 @@
     <Compile Include="CaptchaInfo.cs" />
     <Compile Include="CaptchaInfoEx.cs" />
     <Compile Include="Generator.cs" />
+    <Compile Include="ImageFilter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

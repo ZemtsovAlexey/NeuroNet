@@ -7,9 +7,12 @@ namespace CaptchaGenerator
     {
         public List<Bitmap> Blocks { get; }
 
-        public CaptchaInfoEx(string captcha, Bitmap image, List<Bitmap> blocks) : base(captcha, image)
+        public int TryCount { get;  }
+
+        public CaptchaInfoEx(string captcha, Bitmap image, List<Bitmap> blocks, int tryCount) : base(captcha, image)
         {
             Blocks = blocks;
+            TryCount = tryCount;
         }
     }
 }
