@@ -238,7 +238,7 @@ namespace CaptchaGenerator
         {
             List<Bitmap> result = new List<Bitmap>();
 
-            IntRange[] ranges = { new IntRange {X1 = 9, X2 = 20}, new IntRange { X1 = 21, X2 = 32 }, new IntRange { X1 = 33, X2 = 44 }, new IntRange { X1 = 45, X2 = 56 }, new IntRange { X1 = 57, X2 = 69 } };
+            IntRange[] ranges = { new IntRange {X1 = 9, X2 = 20}, new IntRange { X1 = 21, X2 = 32 }, new IntRange { X1 = 33, X2 = 44 }, new IntRange { X1 = 45, X2 = 56 }, new IntRange { X1 = 57, X2 = 68 } };
 
             foreach (var block in ranges)
             {

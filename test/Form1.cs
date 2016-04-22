@@ -402,11 +402,13 @@ namespace test
 
         private void GenerateBtn_Click(object sender, EventArgs e)
         {
-            var captcha = Generator.GenEx(5, _heightRange, _lineCount);
-            var list = captcha.Blocks;
+            var captcha = Generator.Gen(5, _heightRange, _lineCount);
+            MakeGray(captcha.Image);
+            Contrast(captcha.Image, 100);
+            var list = Generator.SplitBlocksConst(captcha.Image, ColorTranslator.FromHtml("#ffffff"), false);
 
             Blur(list[0]);
-            Contrast(list[0], 100);
+            Contrast(list[0], 50);
             pictureBox1.Image = captcha.Image;
             pictureBox1.BackgroundImage = list[0];
 
@@ -440,8 +442,11 @@ namespace test
             while (list.Count != 5)
             {
                 pictureBox1.Load("http://195.16.122.162/osrweb/UserControls/Captcha.ashx?ClientID=Captcha_ctl00_ContentPlaceHolderBody_TabMain_PanelSearch_CaptchaDigit_ImageCaptcha&FontName=Times+New+Roman&CaptchaColor=%23ececec&ColorLine=%23ececec&ColorBorder=&FontColor=&%D0%A1haracterSet=1234567890&FontSize=18&CaptchaLength=5&%D0%A1aptchaWidth=80&%D0%A1aptchaHeight=34&RandomHeight=4&NumberLine=8&time=07.04.2016%2010:43:01");
-                bool[] isBackColor;
-                list = Generator.SplitBlocks((Bitmap)pictureBox1.Image, ColorTranslator.FromHtml("#ffffff"), 3, out isBackColor);
+                var b = new Bitmap(pictureBox1.Image);
+                MakeGray(b);
+                Contrast(b, 100);
+
+                list = Generator.SplitBlocksConst(b, ColorTranslator.FromHtml("#ffffff"), false);
                 Application.DoEvents();
                 if (cicleCount++ > 20)
                 {
@@ -537,13 +542,16 @@ namespace test
             while (success < _stopSuccess)
             {
                 var errors = 0;
-                var captcha = Generator.GenEx(5, _heightRange, _lineCount, random: random);
+                var captcha = Generator.Gen(5, _heightRange, _lineCount, random: random);
+                MakeGray(captcha.Image);
+                Contrast(captcha.Image, 100);
+                var blocks = Generator.SplitBlocksConst(captcha.Image, ColorTranslator.FromHtml("#ffffff"), false);
 
-                for (var k = 0; k < captcha.Blocks.Count; k++)
+                for (var k = 0; k < blocks.Count; k++)
                 {
-                    Blur(captcha.Blocks[k]);
-                    Contrast(captcha.Blocks[k], 100);
-                    var temp = GetTemp(captcha.Blocks[k]);
+                    Blur(blocks[k]);
+                    Contrast(blocks[k], 50);
+                    var temp = GetTemp(blocks[k]);
                     var answer = _outputFunction.Get(net, temp);
                     var firstAnswer = answer;
                     
@@ -689,14 +697,18 @@ namespace test
 
             while (iteration < _sLearn / 5)
             {
-                var captcha = Generator.GenEx(5, _heightRange, _lineCount, random: random);
+                var captcha = Generator.Gen(5, _heightRange, _lineCount, random: random);
+                MakeGray(captcha.Image);
+                Contrast(captcha.Image, 100);
+                var blocks = Generator.SplitBlocksConst(captcha.Image);
 
-                for (var k = 0; k < captcha.Blocks.Count; k++)
+                for (var k = 0; k < blocks.Count; k++)
                 {
-                    Blur(captcha.Blocks[k]);
-                    Contrast(captcha.Blocks[k], 100);
+                    MakeGray(blocks[k]);
+                    Blur(blocks[k]);
+                    Contrast(blocks[k], 100);
 
-                    var temp = GetTemp(captcha.Blocks[k]);
+                    var temp = GetTemp(blocks[k]);
                     var outputList = _netList.Select(net => _outputFunction.Get(net, temp)).ToList();
                     var answer = outputList.GroupBy(x => x).OrderByDescending(x => x.Count()).FirstOrDefault()?.Key;
 
