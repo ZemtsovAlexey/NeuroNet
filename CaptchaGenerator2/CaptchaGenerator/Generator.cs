@@ -280,7 +280,7 @@ namespace CaptchaGenerator
 
         private static Bitmap ExpandTo15X23(Bitmap img, Color backColor)
         {
-            const int minPixels = 3;
+            const int minPixels = 1;
             int x = 0;
 
             for (int i = 0; i < img.Width; i++)
