@@ -228,118 +228,49 @@ namespace CaptchaGenerator
             return result;
         }
 
-
-        private static void MakeGray(Bitmap bmp)
+        public static List<Bitmap> SplitBlocksConst(Bitmap img)
         {
-            // Задаём формат Пикселя.
-            PixelFormat pxf = PixelFormat.Format24bppRgb;
+            Color backColor = img.GetPixel(0, 0);
 
-            // Получаем данные картинки.
-            Rectangle rect = new Rectangle(0, 0, bmp.Width, bmp.Height);
-            //Блокируем набор данных изображения в памяти
-            BitmapData bmpData = bmp.LockBits(rect, ImageLockMode.ReadWrite, pxf);
-
-            // Получаем адрес первой линии.
-            IntPtr ptr = bmpData.Scan0;
-
-            // Задаём массив из Byte и помещаем в него надор данных.
-            // int numBytes = bmp.Width * bmp.Height * 3; 
-            //На 3 умножаем - поскольку RGB цвет кодируется 3-мя байтами
-            //Либо используем вместо Width - Stride
-            int numBytes = bmpData.Stride * bmp.Height;
-            int widthBytes = bmpData.Stride;
-            byte[] rgbValues = new byte[numBytes];
-
-            // Копируем значения в массив.
-            Marshal.Copy(ptr, rgbValues, 0, numBytes);
-
-            // Перебираем пикселы по 3 байта на каждый и меняем значения
-            for (int counter = 0; counter < rgbValues.Length; counter += 3)
-            {
-
-                int value = rgbValues[counter] + rgbValues[counter + 1] + rgbValues[counter + 2];
-                byte color_b = 0;
-
-                color_b = Convert.ToByte(value / 3);
-
-
-                rgbValues[counter] = color_b;
-                rgbValues[counter + 1] = color_b;
-                rgbValues[counter + 2] = color_b;
-
-            }
-            // Копируем набор данных обратно в изображение
-            Marshal.Copy(rgbValues, 0, ptr, numBytes);
-
-            // Разблокируем набор данных изображения в памяти.
-            bmp.UnlockBits(bmpData);
+            return SplitBlocksConst(img, backColor);
         }
 
-        public static void Contrast(Bitmap sourceBitmap, int threshold)
+        public static List<Bitmap> SplitBlocksConst(Bitmap img, Color backColor)
         {
-            BitmapData sourceData = sourceBitmap.LockBits(new Rectangle(0, 0, sourceBitmap.Width, sourceBitmap.Height), ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
-            byte[] pixelBuffer = new byte[sourceData.Stride * sourceData.Height];
+            const int imageHeight = 23;
+            List<Bitmap> result = new List<Bitmap>();
 
-            Marshal.Copy(sourceData.Scan0, pixelBuffer, 0, pixelBuffer.Length);
-            sourceBitmap.UnlockBits(sourceData);
+            IntRange[] ranges = { new IntRange {X1 = 9, X2 = 20}, new IntRange { X1 = 21, X2 = 32 }, new IntRange { X1 = 33, X2 = 44 }, new IntRange { X1 = 45, X2 = 56 }, new IntRange { X1 = 57, X2 = 69 } };
 
-            double contrastLevel = Math.Pow((100.0 + threshold) / 100.0, 2);
-            double blue = 0;
-            double green = 0;
-            double red = 0;
-
-            for (int k = 0; k + 4 < pixelBuffer.Length; k += 4)
+            foreach (var block in ranges)
             {
-                blue = ((((pixelBuffer[k] / 255.0) - 0.5) * contrastLevel) + 0.5) * 255.0;
-                green = ((((pixelBuffer[k + 1] / 255.0) - 0.5) * contrastLevel) + 0.5) * 255.0;
-                red = ((((pixelBuffer[k + 2] / 255.0) - 0.5) * contrastLevel) + 0.5) * 255.0;
+                int vDelta = 0;
+                for (int j = 0; j < img.Height; j++)
+                {
+                    bool isEmpty = true;
 
-                if (blue > 255)
-                { blue = 255; }
-                else if (blue < 0)
-                { blue = 0; }
+                    for (int i = block.X1; i <= block.X2; i++)
+                    {
+                        if (img.GetPixel(i, j) != backColor)
+                        {
+                            isEmpty = false;
+                            break;
+                        }
+                    }
+                    if (!isEmpty)
+                    {
+                        vDelta = j;
+                        break;
+                    }
+                }
 
-                if (green > 255)
-                { green = 255; }
-                else if (green < 0)
-                { green = 0; }
-
-                if (red > 255)
-                { red = 255; }
-                else if (red < 0)
-                { red = 0; }
-
-                pixelBuffer[k] = (byte)blue;
-                pixelBuffer[k + 1] = (byte)green;
-                pixelBuffer[k + 2] = (byte)red;
+                Rectangle rect = new Rectangle(block.X1, vDelta, block.X2 - block.X1, img.Height - vDelta >= imageHeight ? imageHeight : img.Height - vDelta);
+                result.Add(img.Clone(rect, img.PixelFormat));
             }
 
-            Marshal.Copy(pixelBuffer, 0, sourceData.Scan0, pixelBuffer.Length);
+            return result;
         }
 
-
-        private static Font GetFont(Random random)
-        {
-            Font font = new Font("Times New Roman", 17, FontStyle.Bold);
-            var randomNum = random.Next(0, 3);
-
-            switch (randomNum)
-            {
-                case 0:
-                    font = new Font("Times New Roman", 17, FontStyle.Bold);
-                    break;
-
-                case 1:
-                    font = new Font("Arial", 17, FontStyle.Bold);
-                    break;
-
-                case 2:
-                    font = new Font("Calibri", 17, FontStyle.Bold);
-                    break;
-            }
-
-            return font;
-        }
 
         private class IntRange
         {

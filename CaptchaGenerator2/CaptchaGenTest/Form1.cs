@@ -104,6 +104,17 @@ namespace CaptchaGet
         {
             bool[] isBackColor;
             List<Bitmap> list = Generator.SplitBlocks(bitmap, ColorTranslator.FromHtml(_foneTbx.Text), int.Parse(_pixelsTbx.Text), out isBackColor);
+            ShowBlocks(list);
+
+            _listBox.Items.Clear();
+            for (int i = 0; i < isBackColor.Length; i++)
+            {
+                _listBox.Items.Add(i + " - " + isBackColor[i]);
+            }
+        }
+
+        private void ShowBlocks(List<Bitmap> list)
+        {
             PictureBox[] pbList = new[]
             {pictureBox1, pictureBox2, pictureBox3, pictureBox4, pictureBox5, pictureBox6, pictureBox7};
             for (int i = 0; i < list.Count; i++)
@@ -117,12 +128,6 @@ namespace CaptchaGet
             {
                 pbList[i].Image = new Bitmap(1, 1);
             }
-
-            _listBox.Items.Clear();
-            for (int i = 0; i < isBackColor.Length; i++)
-            {
-                _listBox.Items.Add(i + " - " + isBackColor[i]);
-            }
         }
 
         private void _btnLoad_Click(object sender, EventArgs e)
@@ -134,7 +139,8 @@ namespace CaptchaGet
             {
                 _pictureBox.Load(_urlTbx.Text);
                 bool[] isBackColor;
-                list = Generator.SplitBlocks((Bitmap) _pictureBox.Image, ColorTranslator.FromHtml(_foneTbx.Text), int.Parse(_pixelsTbx.Text), out isBackColor);
+                //list = Generator.SplitBlocks((Bitmap) _pictureBox.Image, ColorTranslator.FromHtml(_foneTbx.Text), int.Parse(_pixelsTbx.Text), out isBackColor);
+                list = Generator.SplitBlocksConst((Bitmap) _pictureBox.Image);
                 Application.DoEvents();
                 if (cicleCount++ > 20)
                 {
@@ -144,7 +150,8 @@ namespace CaptchaGet
                 break;
             }
             _infoStatusLbl.Text = "Циклов распознания: " + cicleCount;
-            SplitImageToBlocks((Bitmap) _pictureBox.Image);
+            //SplitImageToBlocks((Bitmap) _pictureBox.Image);
+            ShowBlocks(list);
         }
 
         private void pictureBox1_Click(object sender, EventArgs e)
