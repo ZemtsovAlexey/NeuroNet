@@ -234,7 +234,7 @@ namespace CaptchaGenerator
             return SplitBlocksConst(img, backColor);
         }
 
-        public static List<Bitmap> SplitBlocksConst(Bitmap img, Color backColor)
+        public static List<Bitmap> SplitBlocksConst(Bitmap img, Color backColor, bool expand = true)
         {
             List<Bitmap> result = new List<Bitmap>();
 
@@ -263,14 +263,22 @@ namespace CaptchaGenerator
                 }
 
                 Rectangle rect = new Rectangle(block.X1, vDelta, block.X2 - block.X1, img.Height - vDelta >= imageHeight ? imageHeight : img.Height - vDelta);
-                Bitmap bmp = FormatTo15X23(img.Clone(rect, img.PixelFormat), backColor);
+                Bitmap bmp;
+                if (expand)
+                {
+                    bmp = ExpandTo15X23(img.Clone(rect, img.PixelFormat), backColor);
+                }
+                else
+                {
+                    bmp = img.Clone(rect, img.PixelFormat);
+                }
                 result.Add(bmp);
             }
 
             return result;
         }
 
-        private static Bitmap FormatTo15X23(Bitmap img, Color backColor)
+        private static Bitmap ExpandTo15X23(Bitmap img, Color backColor)
         {
             const int minPixels = 3;
             int x = 0;
