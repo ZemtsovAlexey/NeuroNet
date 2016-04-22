@@ -9,6 +9,8 @@ namespace CaptchaGenerator
     {
         private static Random rndFont = new Random();
         private static readonly string[] RundomColors = {"#0000FF", "#000080", "#008000"};
+        const int imageHeight = 23;
+        const int imageWidth = 15;
 
         public static CaptchaInfo Gen(int stringLength = 5, int randomHeight = 4, int numberLine = 12,
             int captchaWidth = 80, int captchaHeight = 34, string backColor = "#ececec", Random random = null)
@@ -20,7 +22,7 @@ namespace CaptchaGenerator
 
             random = random ?? new Random();
 
-            Font fnt = GetFont(random);
+            Font fnt = new Font("Times New Roman", 17, FontStyle.Bold);
 
             Random rnd = new Random();
 
@@ -127,9 +129,6 @@ namespace CaptchaGenerator
 
         public static List<Bitmap> SplitBlocks(Bitmap img, Color backColor, int minPixels, out bool [] isBackColor)
         {
-            const int imageHeight = 23;
-            const int imageWidth = 15;
-
             List<Bitmap> result= new List<Bitmap>();
             List<IntRange> blocks = new List<IntRange>();
             isBackColor = new bool[img.Width];
@@ -237,7 +236,6 @@ namespace CaptchaGenerator
 
         public static List<Bitmap> SplitBlocksConst(Bitmap img, Color backColor)
         {
-            const int imageHeight = 23;
             List<Bitmap> result = new List<Bitmap>();
 
             IntRange[] ranges = { new IntRange {X1 = 9, X2 = 20}, new IntRange { X1 = 21, X2 = 32 }, new IntRange { X1 = 33, X2 = 44 }, new IntRange { X1 = 45, X2 = 56 }, new IntRange { X1 = 57, X2 = 69 } };
@@ -265,10 +263,52 @@ namespace CaptchaGenerator
                 }
 
                 Rectangle rect = new Rectangle(block.X1, vDelta, block.X2 - block.X1, img.Height - vDelta >= imageHeight ? imageHeight : img.Height - vDelta);
-                result.Add(img.Clone(rect, img.PixelFormat));
+                Bitmap bmp = FormatTo15X23(img.Clone(rect, img.PixelFormat), backColor);
+                result.Add(bmp);
             }
 
             return result;
+        }
+
+        private static Bitmap FormatTo15X23(Bitmap img, Color backColor)
+        {
+            const int minPixels = 3;
+            int x = 0;
+
+            for (int i = 0; i < img.Width; i++)
+            {
+                int findedPixels = 0;
+                bool founded = false;
+
+                for (int j = 0; j < img.Height; j++)
+                {
+                    if (img.GetPixel(i, j) != backColor)
+                    {
+                        findedPixels++;
+                    }
+
+                    if (findedPixels >= minPixels)
+                    {
+                        founded = true;
+                        break;
+                    }
+                }
+                if (founded)
+                {
+                    x = i;
+                    break;
+                }
+            }
+
+            Bitmap bitmap = new Bitmap(imageWidth, imageHeight); 
+            using (Graphics g = Graphics.FromImage(bitmap))
+            {
+                g.FillRectangle(new SolidBrush(backColor), 0, 0, bitmap.Width, bitmap.Height);
+                Rectangle rect = new Rectangle(x, 0, img.Width - x, img.Height);
+                g.DrawImage(img.Clone(rect, img.PixelFormat), new Point(0, 0));
+            }
+
+            return bitmap;
         }
 
 
