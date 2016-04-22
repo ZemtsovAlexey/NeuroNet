@@ -28,9 +28,9 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.openFileDialog3 = new System.Windows.Forms.OpenFileDialog();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.tabPage1 = new System.Windows.Forms.TabPage();
@@ -81,6 +81,10 @@
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+            this.minLearnTb = new System.Windows.Forms.TextBox();
+            this.label10 = new System.Windows.Forms.Label();
+            this.maxLearnTb = new System.Windows.Forms.TextBox();
+            this.label11 = new System.Windows.Forms.Label();
             this.tabPage1.SuspendLayout();
             this.tabControl2.SuspendLayout();
             this.tabPage4.SuspendLayout();
@@ -192,18 +196,18 @@
             // 
             // chart1
             // 
-            chartArea1.Name = "ChartArea1";
-            this.chart1.ChartAreas.Add(chartArea1);
-            legend1.Name = "Legend1";
-            this.chart1.Legends.Add(legend1);
+            chartArea2.Name = "ChartArea1";
+            this.chart1.ChartAreas.Add(chartArea2);
+            legend2.Name = "Legend1";
+            this.chart1.Legends.Add(legend2);
             this.chart1.Location = new System.Drawing.Point(6, 6);
             this.chart1.Name = "chart1";
             this.chart1.Palette = System.Windows.Forms.DataVisualization.Charting.ChartColorPalette.Pastel;
-            series1.ChartArea = "ChartArea1";
-            series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.SplineArea;
-            series1.Legend = "Legend1";
-            series1.Name = "Series1";
-            this.chart1.Series.Add(series1);
+            series2.ChartArea = "ChartArea1";
+            series2.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.SplineArea;
+            series2.Legend = "Legend1";
+            series2.Name = "Series1";
+            this.chart1.Series.Add(series2);
             this.chart1.Size = new System.Drawing.Size(955, 515);
             this.chart1.TabIndex = 71;
             this.chart1.Text = "chart1";
@@ -474,6 +478,10 @@
             // 
             // tabPage3
             // 
+            this.tabPage3.Controls.Add(this.maxLearnTb);
+            this.tabPage3.Controls.Add(this.label11);
+            this.tabPage3.Controls.Add(this.minLearnTb);
+            this.tabPage3.Controls.Add(this.label10);
             this.tabPage3.Controls.Add(this.TestBtn);
             this.tabPage3.Controls.Add(this.kLearnTB);
             this.tabPage3.Controls.Add(this.LearnAllBtn);
@@ -635,6 +643,40 @@
             this.openFileDialog1.FileName = "openFileDialog2";
             this.openFileDialog1.FileOk += new System.ComponentModel.CancelEventHandler(this.openNet2FileDialog_FileOk);
             // 
+            // minLearnTb
+            // 
+            this.minLearnTb.Location = new System.Drawing.Point(223, 9);
+            this.minLearnTb.Name = "minLearnTb";
+            this.minLearnTb.Size = new System.Drawing.Size(48, 20);
+            this.minLearnTb.TabIndex = 58;
+            this.minLearnTb.TextChanged += new System.EventHandler(this.minLearnTb_TextChanged);
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(277, 14);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(50, 13);
+            this.label10.TabIndex = 57;
+            this.label10.Text = "minLearn";
+            // 
+            // maxLearnTb
+            // 
+            this.maxLearnTb.Location = new System.Drawing.Point(223, 38);
+            this.maxLearnTb.Name = "maxLearnTb";
+            this.maxLearnTb.Size = new System.Drawing.Size(48, 20);
+            this.maxLearnTb.TabIndex = 60;
+            this.maxLearnTb.TextChanged += new System.EventHandler(this.maxLearnTb_TextChanged);
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(277, 43);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(53, 13);
+            this.label11.TabIndex = 59;
+            this.label11.Text = "maxLearn";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -719,6 +761,10 @@
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.Button button5;
+        private System.Windows.Forms.TextBox maxLearnTb;
+        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.TextBox minLearnTb;
+        private System.Windows.Forms.Label label10;
     }
 }
 

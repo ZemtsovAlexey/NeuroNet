@@ -43,6 +43,9 @@ namespace test
         private ActivationNetwork _network;
         private DistanceNetwork _distanceNetwork;
 
+        private double minLearn = -1;
+        private double maxLearn = 1;
+
         private int _netSizeX = 15;
         private int _netSizeY = 10;
 
@@ -56,6 +59,8 @@ namespace test
             digitsNum.Value = _digitsCount;
             heightRange.Value = _heightRange;
             lineCount.Value = _lineCount;
+            maxLearnTb.Text = maxLearn.ToString();
+            minLearnTb.Text = minLearn.ToString();
 
             InitNet();
         }
@@ -343,7 +348,7 @@ namespace test
             {
                 for (var i = 0; i < _outputFunction.SizeStek; i++)
                 {
-                    digits[i] = i == value ? 1 : -1;
+                    digits[i] = i == value ? maxLearn : minLearn;
                 }
             }
 
@@ -397,10 +402,12 @@ namespace test
 
         private void GenerateBtn_Click(object sender, EventArgs e)
         {
-            var list = Generator.GenEx(5, _heightRange, _lineCount).Blocks;
+            var captcha = Generator.GenEx(5, _heightRange, _lineCount);
+            var list = captcha.Blocks;
 
             Blur(list[0]);
             Contrast(list[0], 100);
+            pictureBox1.Image = captcha.Image;
             pictureBox1.BackgroundImage = list[0];
 
             var temp = GetTemp(list[0]);
@@ -525,11 +532,12 @@ namespace test
             var net = _netList.First();
             int success = 0;
             long iteration = 0;
+            Random random = new Random();
 
             while (success < _stopSuccess)
             {
                 var errors = 0;
-                var captcha = Generator.GenEx(5, _heightRange, _lineCount);
+                var captcha = Generator.GenEx(5, _heightRange, _lineCount, random: random);
 
                 for (var k = 0; k < captcha.Blocks.Count; k++)
                 {
@@ -677,10 +685,11 @@ namespace test
         {
             int errors = 0;
             long iteration = 0;
+            Random random = new Random();
 
             while (iteration < _sLearn / 5)
             {
-                var captcha = Generator.GenEx(5, _heightRange, _lineCount);
+                var captcha = Generator.GenEx(5, _heightRange, _lineCount, random: random);
 
                 for (var k = 0; k < captcha.Blocks.Count; k++)
                 {
@@ -927,6 +936,16 @@ namespace test
             {
                 TestNet();
             });
+        }
+
+        private void minLearnTb_TextChanged(object sender, EventArgs e)
+        {
+            double.TryParse(minLearnTb.Text, out minLearn);
+        }
+
+        private void maxLearnTb_TextChanged(object sender, EventArgs e)
+        {
+            double.TryParse(maxLearnTb.Text, out maxLearn);
         }
     }
 }
