@@ -30,7 +30,7 @@ namespace test
         private double _alpha = 1.0;
         private int _digitsCount = 1;
         private int _heightRange = 0;
-        private int _lineCount = 8;
+        private int _lineCount = 0;
         private bool _showLogs = true;
         private List<Net> _netList;
         private IActivation _activationFunction;
@@ -76,7 +76,7 @@ namespace test
             _outputFunction.Count = _digitsCount;
             _outputNeurons = _outputFunction.OutputNeurons;
 
-            var inputSize = 15 * 23;
+            var inputSize = 16 * 30;
             var layers = NetHelpers.GetLayerSizeList(_netSizeX, _netSizeY, _outputNeurons);
             var random = new RandomNumbers();
 
@@ -180,10 +180,10 @@ namespace test
                 {
                     Col = bitmap.GetPixel(i, j);
 
-                    var a = ((Convert.ToDouble(Col.R) / 255.0) + (Convert.ToDouble(Col.G) / 255.0) + (Convert.ToDouble(Col.B) / 255.0)) / 3;
-                    var b = Convert.ToDouble(Col.B) / 255.0;
+                    var a = (Convert.ToDouble(Col.R) + Convert.ToDouble(Col.G) + Convert.ToDouble(Col.B)) / 3;
+                    var b = Convert.ToDouble(Col.A);
 
-                    temp[i * (bitmap.Height) + j] = b;
+                    temp[i * (j + 1)] = b == 255 ? 1 : 0;
                 }
             }
 
@@ -402,13 +402,10 @@ namespace test
 
         private void GenerateBtn_Click(object sender, EventArgs e)
         {
-            var captcha = Generator.Gen(5, _heightRange, _lineCount);
-            MakeGray(captcha.Image);
-            Contrast(captcha.Image, 100);
-            var list = Generator.SplitBlocksConst(captcha.Image, ColorTranslator.FromHtml("#ffffff"), false);
+            var captcha = Generator.Gen(1, _heightRange, _lineCount, 16, 23);
+            var bm = Generator.ExpandTo15X23Height(captcha.Image, Color.FromArgb(0, 0, 0, 0));
+            var list = new List<Bitmap> { bm };
 
-            Blur(list[0]);
-            Contrast(list[0], 50);
             pictureBox1.Image = captcha.Image;
             pictureBox1.BackgroundImage = list[0];
 
@@ -417,20 +414,16 @@ namespace test
 
             captchaResultLabel.Text = outputList.GroupBy(x => x).OrderByDescending(x => x.Count()).FirstOrDefault()?.Key;
 
-            resultTextBox.AppendText($"{Environment.NewLine}");
+            resultTextBox.Clear();
 
-            for (var i = 0; i < outputList.Count; i++)
+            for (var y = 1; y <= 23; y++)
             {
-                var myList = resultTextBox.Lines.ToList();
-
-                if (myList.Count > 40)
+                for (var x = 1; x <= 16; x++)
                 {
-                    resultTextBox.Clear();
+                    resultTextBox.AppendText($"{temp[(x - 1)*(y-1)]}");
                 }
 
-                resultTextBox.AppendText($"{Environment.NewLine}Net {i + 1} - {outputList[i]}");
-                resultTextBox.SelectionStart = resultTextBox.Text.Length;
-                resultTextBox.ScrollToCaret();
+                resultTextBox.AppendText($"{Environment.NewLine}");
             }
         }
 
@@ -542,15 +535,13 @@ namespace test
             while (success < _stopSuccess)
             {
                 var errors = 0;
-                var captcha = Generator.Gen(5, _heightRange, _lineCount, random: random);
-                MakeGray(captcha.Image);
-                Contrast(captcha.Image, 100);
-                var blocks = Generator.SplitBlocksConst(captcha.Image, ColorTranslator.FromHtml("#ffffff"), false);
+                var captcha = Generator.Gen(1, _heightRange, _lineCount, 16, 23, random: random);
+                //var blocks = Generator.SplitBlocksConst(captcha.Image, ColorTranslator.FromHtml("#ffffff"), true);
+                var bm = Generator.ExpandTo15X23Height(captcha.Image, Color.FromArgb(0, 0, 0, 0));
+                var blocks = new List<Bitmap> { bm };
 
                 for (var k = 0; k < blocks.Count; k++)
                 {
-                    Blur(blocks[k]);
-                    Contrast(blocks[k], 50);
                     var temp = GetTemp(blocks[k]);
                     var answer = _outputFunction.Get(net, temp);
                     var firstAnswer = answer;
@@ -958,6 +949,53 @@ namespace test
         private void maxLearnTb_TextChanged(object sender, EventArgs e)
         {
             double.TryParse(maxLearnTb.Text, out maxLearn);
+        }
+
+        private void pictureBox1_Click(object sender, EventArgs e)
+        {
+            openFileDialog2.ShowDialog();
+        }
+
+        private void openFileDialog2_FileOk(object sender, CancelEventArgs e)
+        {
+            var img = new Bitmap(openFileDialog2.FileName);
+            pictureBox1.Image = img;
+
+            var list = Generator.SplitBlocksConst(img, Color.FromArgb(0, 0, 50, 0), true);
+
+            pictureBox1.BackgroundImage = list[0];
+            pictureBox2.BackgroundImage = list[0];
+            pictureBox3.BackgroundImage = list[1];
+            pictureBox4.BackgroundImage = list[2];
+            pictureBox5.BackgroundImage = list[3];
+            pictureBox6.BackgroundImage = list[4];
+
+            string result = null;
+
+            foreach (var bitmap in list)
+            {
+                var t = GetTemp(bitmap);
+                var o = _netList.Select(net => _outputFunction.Get(net, t)).ToList();
+                var answer = o.GroupBy(x => x).OrderByDescending(x => x.Count()).FirstOrDefault()?.Key;
+
+                result += answer;
+            }
+
+            captchaResultLabel.Text = result;
+
+            var temp = GetTemp(list[0]);
+
+            resultTextBox.Clear();
+
+            for (var y = 1; y <= 23; y++)
+            {
+                for (var x = 1; x <= 16; x++)
+                {
+                    resultTextBox.AppendText($"{temp[(x - 1) * (y - 1)]}");
+                }
+
+                resultTextBox.AppendText($"{Environment.NewLine}");
+            }
         }
     }
 }

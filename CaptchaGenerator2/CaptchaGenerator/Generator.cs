@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Text;
 using System.Linq;
 
 namespace CaptchaGenerator
@@ -8,23 +9,22 @@ namespace CaptchaGenerator
     public static class Generator
     {
         private static Random rndFont = new Random();
-        private static readonly string[] RundomColors = {"#0000FF", "#000080", "#008000"};
+        private static readonly string[] RundomColors = { "#505050", "#505050", "#505050" };
         const int imageHeight = 23;
-        const int imageWidth = 15;
+        const int imageWidth = 16;
 
         public static CaptchaInfo Gen(int stringLength = 5, int randomHeight = 4, int numberLine = 12,
-            int captchaWidth = 80, int captchaHeight = 34, string backColor = "#ececec", Random random = null)
+            int captchaWidth = 80, int captchaHeight = 30, string backColor = "#ececec", Random random = null)
         {
             Bitmap bmap = new Bitmap(captchaWidth, captchaHeight);
             Graphics grfs = Graphics.FromImage(bmap);
-            var backGround = ColorTranslator.FromHtml(backColor);
+            var backGround = Color.FromArgb(0, 0, 0, 0);// ColorTranslator.FromHtml(backColor);
             grfs.Clear(backGround);
 
             random = random ?? new Random();
 
-            Font fnt = new Font("Times New Roman", 17, FontStyle.Bold);
-
             Random rnd = new Random();
+            var font = GetFont(random);
 
             //grfs.DrawLine(Pens.Black, rnd.Next(0, 50), rnd.Next(10, 30), rnd.Next(0, 200), rnd.Next(0, 50));
             //grfs.DrawRectangle(Pens.Blue, rnd.Next(0, 20), rnd.Next(0, 20), rnd.Next(50, 80), rnd.Next(0, 20));
@@ -46,49 +46,50 @@ namespace CaptchaGenerator
             {
                 char c = str[i];
 
-                sizes[i] = grfs.MeasureString(c.ToString(), fnt,
+                sizes[i] = grfs.MeasureString(c.ToString(), font,
                     new PointF(captchaWidth/(float) stringLength, captchaHeight), StringFormat.GenericTypographic);
                 sizes[i].Width += 1;
                 cBmap[i] = new Bitmap((int) Math.Round(sizes[i].Width), (int) Math.Round(sizes[i].Height));
                 cGrfs[i] = Graphics.FromImage(cBmap[i]);
                 cGrfs[i].Clear(backGround);
 
-                Brush b = new SolidBrush(ColorTranslator.FromHtml(RundomColors[rnd.Next(0, 3)]));
+                Brush b = new SolidBrush(ColorTranslator.FromHtml("#505050"));
 
-                cGrfs[i].DrawString(c.ToString(), fnt, b, 0, 0, StringFormat.GenericTypographic);
+                cGrfs[i].TextRenderingHint = TextRenderingHint.SingleBitPerPixel;
+                cGrfs[i].DrawString(c.ToString(), font, b, 0, 0, StringFormat.GenericTypographic);
 
-                for (int j = 0; j < rnd.Next(0, numberLine); j++)
-                {
-                    if (rnd.Next(0, 10) >= 1)
-                    {
-                        var y1 = rnd.Next(0, (int) sizes[i].Height);
-                        cGrfs[i].DrawLine(new Pen(backGround), 
-                            rnd.Next(0, (int) sizes[i].Width / 2), 
-                            y1,
-                            rnd.Next((int)sizes[i].Width / 2, (int) sizes[i].Width), 
-                            y1);
-                    }
-                    else
-                    {
-                        var y1 = rnd.Next(0, (int)sizes[i].Height / 2);
-                        var y2 = rnd.Next((int)sizes[i].Height / 2, (int)sizes[i].Height);
-                        cGrfs[i].DrawLine(new Pen(backGround),
-                            rnd.Next(0, (int)sizes[i].Width / 2),
-                            y1,
-                            rnd.Next((int)sizes[i].Width / 2, (int)sizes[i].Width),
-                            y2);
+                //for (int j = 0; j < rnd.Next(0, numberLine); j++)
+                //{
+                //    if (rnd.Next(0, 10) >= 1)
+                //    {
+                //        var y1 = rnd.Next(0, (int) sizes[i].Height);
+                //        cGrfs[i].DrawLine(new Pen(backGround), 
+                //            rnd.Next(0, (int) sizes[i].Width / 2), 
+                //            y1,
+                //            rnd.Next((int)sizes[i].Width / 2, (int) sizes[i].Width), 
+                //            y1);
+                //    }
+                //    else
+                //    {
+                //        var y1 = rnd.Next(0, (int)sizes[i].Height / 2);
+                //        var y2 = rnd.Next((int)sizes[i].Height / 2, (int)sizes[i].Height);
+                //        cGrfs[i].DrawLine(new Pen(backGround),
+                //            rnd.Next(0, (int)sizes[i].Width / 2),
+                //            y1,
+                //            rnd.Next((int)sizes[i].Width / 2, (int)sizes[i].Width),
+                //            y2);
 
-                        /*cGrfs[i].DrawLine(new Pen(backGround), rnd.Next(0, (int) sizes[i].Width/2),
-                            rnd.Next(0, (int) sizes[i].Height/2), rnd.Next((int) sizes[i].Width/2, (int) sizes[i].Width),
-                            rnd.Next((int) sizes[i].Height/2, (int) sizes[i].Height));
-                        /*var x1 = rnd.Next(0, (int) sizes[i].Width);
-                        cGrfs[i].DrawLine(new Pen(backGround), x1,
-                            rnd.Next(0, (int) sizes[i].Height/2), x1,
-                            rnd.Next((int) sizes[i].Height/2, (int) sizes[i].Height));*/
+                //        /*cGrfs[i].DrawLine(new Pen(backGround), rnd.Next(0, (int) sizes[i].Width/2),
+                //            rnd.Next(0, (int) sizes[i].Height/2), rnd.Next((int) sizes[i].Width/2, (int) sizes[i].Width),
+                //            rnd.Next((int) sizes[i].Height/2, (int) sizes[i].Height));
+                //        /*var x1 = rnd.Next(0, (int) sizes[i].Width);
+                //        cGrfs[i].DrawLine(new Pen(backGround), x1,
+                //            rnd.Next(0, (int) sizes[i].Height/2), x1,
+                //            rnd.Next((int) sizes[i].Height/2, (int) sizes[i].Height));*/
 
-                    }
-                    //cGrfs[i].DrawLine(new Pen(backGround), rnd.Next(0, (int) sizes[i].Width / 2), rnd.Next(0, (int)sizes[i].Height / 2), rnd.Next((int)sizes[i].Width / 2, (int)sizes[i].Width), rnd.Next((int)sizes[i].Height / 2, (int)sizes[i].Height));
-                }
+                //    }
+                //    //cGrfs[i].DrawLine(new Pen(backGround), rnd.Next(0, (int) sizes[i].Width / 2), rnd.Next(0, (int)sizes[i].Height / 2), rnd.Next((int)sizes[i].Width / 2, (int)sizes[i].Width), rnd.Next((int)sizes[i].Height / 2, (int)sizes[i].Height));
+                //}
             }
 
             int x = (int) ((captchaWidth - sizes.Sum(s => s.Width))/2);
@@ -96,8 +97,8 @@ namespace CaptchaGenerator
 
             for (int i = 0; i < stringLength; i++)
             {
-                if (i > 0) x += (int) sizes[i - 1].Width;
-                grfs.DrawImage(cBmap[i], x, y + rnd.Next(-randomHeight, randomHeight));
+                if (i > 0) x += 16;
+                grfs.DrawImage(cBmap[i], x, y/* + rnd.Next(-randomHeight, randomHeight)*/);
             }
 
             //grfs.DrawString(str, fnt, Brushes.Green, 5, 5);
@@ -109,7 +110,7 @@ namespace CaptchaGenerator
         }
 
         public static CaptchaInfoEx GenEx(int stringLength = 5, int randomHeight = 4, int numberLine = 12,
-            int captchaWidth = 80, int captchaHeight = 34, string backColor = "#ffffff", Random random = null)
+            int captchaWidth = 80, int captchaHeight = 30, string backColor = "#ffffff", Random random = null)
         {
             List<Bitmap> splitBlocks = new List<Bitmap>();
             CaptchaInfo captchaInfo = new CaptchaInfo(null, null);
@@ -237,8 +238,7 @@ namespace CaptchaGenerator
         public static List<Bitmap> SplitBlocksConst(Bitmap img, Color backColor, bool expand = true)
         {
             List<Bitmap> result = new List<Bitmap>();
-
-            IntRange[] ranges = { new IntRange {X1 = 9, X2 = 20}, new IntRange { X1 = 21, X2 = 32 }, new IntRange { X1 = 33, X2 = 44 }, new IntRange { X1 = 45, X2 = 56 }, new IntRange { X1 = 57, X2 = 68 } };
+            IntRange[] ranges = { new IntRange {X1 = 0, X2 = 15}, new IntRange { X1 = 16, X2 = 31 }, new IntRange { X1 = 32, X2 = 47 }, new IntRange { X1 = 48, X2 = 63 }, new IntRange { X1 = 64, X2 = 79 } };
 
             foreach (var block in ranges)
             {
@@ -278,7 +278,7 @@ namespace CaptchaGenerator
             return result;
         }
 
-        private static Bitmap ExpandTo15X23(Bitmap img, Color backColor)
+        public static Bitmap ExpandTo15X23(Bitmap img, Color backColor)
         {
             const int minPixels = 1;
             int x = 0;
@@ -319,6 +319,63 @@ namespace CaptchaGenerator
             return bitmap;
         }
 
+        public static Bitmap ExpandTo15X23Height(Bitmap img, Color backColor)
+        {
+            const int minPixels = 1;
+            int y = 0;
+
+            for (int i = 0; i < img.Height; i++)
+            {
+                int findedPixels = 0;
+                bool founded = false;
+
+                for (int j = 0; j < img.Width; j++)
+                {
+                    if (img.GetPixel(i, j) != backColor)
+                    {
+                        findedPixels++;
+                    }
+
+                    if (findedPixels >= minPixels)
+                    {
+                        founded = true;
+                        break;
+                    }
+                }
+                if (founded)
+                {
+                    y = i;
+                    break;
+                }
+            }
+
+            Bitmap bitmap = new Bitmap(imageWidth, imageHeight);
+            using (Graphics g = Graphics.FromImage(bitmap))
+            {
+                g.FillRectangle(new SolidBrush(backColor), 0, 0, bitmap.Width, bitmap.Height);
+                Rectangle rect = new Rectangle(0, y, img.Width, img.Height-y);
+                g.DrawImage(img.Clone(rect, img.PixelFormat), new Point(0, 0));
+            }
+
+            return bitmap;
+        }
+
+
+        private static Font GetFont(Random random)
+        {
+            var r = random.Next(2);
+
+            switch (r)
+            {
+                case 0:
+                    return new Font("MV Boli", 18, FontStyle.Regular, GraphicsUnit.Point);
+
+                case 1:
+                    return new Font("Impact", 18, FontStyle.Regular, GraphicsUnit.Point);
+
+                default: return new Font("MV Boli", 15, FontStyle.Bold);
+            }
+        }
 
         private class IntRange
         {

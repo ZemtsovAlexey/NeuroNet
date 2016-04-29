@@ -28,9 +28,9 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea3 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend3 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series3 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.openFileDialog3 = new System.Windows.Forms.OpenFileDialog();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.tabPage1 = new System.Windows.Forms.TabPage();
@@ -65,6 +65,10 @@
             this.netXTB = new System.Windows.Forms.TextBox();
             this.netYTB = new System.Windows.Forms.TextBox();
             this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.maxLearnTb = new System.Windows.Forms.TextBox();
+            this.label11 = new System.Windows.Forms.Label();
+            this.minLearnTb = new System.Windows.Forms.TextBox();
+            this.label10 = new System.Windows.Forms.Label();
             this.TestBtn = new System.Windows.Forms.Button();
             this.kLearnTB = new System.Windows.Forms.TextBox();
             this.LearnAllBtn = new System.Windows.Forms.Button();
@@ -81,10 +85,12 @@
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
-            this.minLearnTb = new System.Windows.Forms.TextBox();
-            this.label10 = new System.Windows.Forms.Label();
-            this.maxLearnTb = new System.Windows.Forms.TextBox();
-            this.label11 = new System.Windows.Forms.Label();
+            this.openFileDialog2 = new System.Windows.Forms.OpenFileDialog();
+            this.pictureBox2 = new System.Windows.Forms.PictureBox();
+            this.pictureBox3 = new System.Windows.Forms.PictureBox();
+            this.pictureBox4 = new System.Windows.Forms.PictureBox();
+            this.pictureBox5 = new System.Windows.Forms.PictureBox();
+            this.pictureBox6 = new System.Windows.Forms.PictureBox();
             this.tabPage1.SuspendLayout();
             this.tabControl2.SuspendLayout();
             this.tabPage4.SuspendLayout();
@@ -100,6 +106,11 @@
             this.tabPage3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.tabControl1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox5)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox6)).BeginInit();
             this.SuspendLayout();
             // 
             // openFileDialog3
@@ -155,6 +166,11 @@
             // 
             // tabPage4
             // 
+            this.tabPage4.Controls.Add(this.pictureBox6);
+            this.tabPage4.Controls.Add(this.pictureBox5);
+            this.tabPage4.Controls.Add(this.pictureBox4);
+            this.tabPage4.Controls.Add(this.pictureBox3);
+            this.tabPage4.Controls.Add(this.pictureBox2);
             this.tabPage4.Controls.Add(this.resultTextBox);
             this.tabPage4.Controls.Add(this.ShowLogsBtn);
             this.tabPage4.Location = new System.Drawing.Point(4, 22);
@@ -196,18 +212,18 @@
             // 
             // chart1
             // 
-            chartArea2.Name = "ChartArea1";
-            this.chart1.ChartAreas.Add(chartArea2);
-            legend2.Name = "Legend1";
-            this.chart1.Legends.Add(legend2);
+            chartArea3.Name = "ChartArea1";
+            this.chart1.ChartAreas.Add(chartArea3);
+            legend3.Name = "Legend1";
+            this.chart1.Legends.Add(legend3);
             this.chart1.Location = new System.Drawing.Point(6, 6);
             this.chart1.Name = "chart1";
             this.chart1.Palette = System.Windows.Forms.DataVisualization.Charting.ChartColorPalette.Pastel;
-            series2.ChartArea = "ChartArea1";
-            series2.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.SplineArea;
-            series2.Legend = "Legend1";
-            series2.Name = "Series1";
-            this.chart1.Series.Add(series2);
+            series3.ChartArea = "ChartArea1";
+            series3.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.SplineArea;
+            series3.Legend = "Legend1";
+            series3.Name = "Series1";
+            this.chart1.Series.Add(series3);
             this.chart1.Size = new System.Drawing.Size(955, 515);
             this.chart1.TabIndex = 71;
             this.chart1.Text = "chart1";
@@ -501,6 +517,40 @@
             this.tabPage3.Text = "Обучение";
             this.tabPage3.UseVisualStyleBackColor = true;
             // 
+            // maxLearnTb
+            // 
+            this.maxLearnTb.Location = new System.Drawing.Point(223, 38);
+            this.maxLearnTb.Name = "maxLearnTb";
+            this.maxLearnTb.Size = new System.Drawing.Size(48, 20);
+            this.maxLearnTb.TabIndex = 60;
+            this.maxLearnTb.TextChanged += new System.EventHandler(this.maxLearnTb_TextChanged);
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(277, 43);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(53, 13);
+            this.label11.TabIndex = 59;
+            this.label11.Text = "maxLearn";
+            // 
+            // minLearnTb
+            // 
+            this.minLearnTb.Location = new System.Drawing.Point(223, 9);
+            this.minLearnTb.Name = "minLearnTb";
+            this.minLearnTb.Size = new System.Drawing.Size(48, 20);
+            this.minLearnTb.TabIndex = 58;
+            this.minLearnTb.TextChanged += new System.EventHandler(this.minLearnTb_TextChanged);
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(277, 14);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(50, 13);
+            this.label10.TabIndex = 57;
+            this.label10.Text = "minLearn";
+            // 
             // TestBtn
             // 
             this.TestBtn.Location = new System.Drawing.Point(7, 33);
@@ -628,6 +678,7 @@
             this.pictureBox1.Size = new System.Drawing.Size(225, 139);
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
+            this.pictureBox1.Click += new System.EventHandler(this.pictureBox1_Click);
             // 
             // tabControl1
             // 
@@ -643,39 +694,65 @@
             this.openFileDialog1.FileName = "openFileDialog2";
             this.openFileDialog1.FileOk += new System.ComponentModel.CancelEventHandler(this.openNet2FileDialog_FileOk);
             // 
-            // minLearnTb
+            // openFileDialog2
             // 
-            this.minLearnTb.Location = new System.Drawing.Point(223, 9);
-            this.minLearnTb.Name = "minLearnTb";
-            this.minLearnTb.Size = new System.Drawing.Size(48, 20);
-            this.minLearnTb.TabIndex = 58;
-            this.minLearnTb.TextChanged += new System.EventHandler(this.minLearnTb_TextChanged);
+            this.openFileDialog2.FileName = "openFileDialog2";
+            this.openFileDialog2.FileOk += new System.ComponentModel.CancelEventHandler(this.openFileDialog2_FileOk);
             // 
-            // label10
+            // pictureBox2
             // 
-            this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(277, 14);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(50, 13);
-            this.label10.TabIndex = 57;
-            this.label10.Text = "minLearn";
+            this.pictureBox2.BackColor = System.Drawing.SystemColors.ButtonFace;
+            this.pictureBox2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.pictureBox2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pictureBox2.Location = new System.Drawing.Point(375, 45);
+            this.pictureBox2.Name = "pictureBox2";
+            this.pictureBox2.Size = new System.Drawing.Size(109, 139);
+            this.pictureBox2.TabIndex = 77;
+            this.pictureBox2.TabStop = false;
             // 
-            // maxLearnTb
+            // pictureBox3
             // 
-            this.maxLearnTb.Location = new System.Drawing.Point(223, 38);
-            this.maxLearnTb.Name = "maxLearnTb";
-            this.maxLearnTb.Size = new System.Drawing.Size(48, 20);
-            this.maxLearnTb.TabIndex = 60;
-            this.maxLearnTb.TextChanged += new System.EventHandler(this.maxLearnTb_TextChanged);
+            this.pictureBox3.BackColor = System.Drawing.SystemColors.ButtonFace;
+            this.pictureBox3.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.pictureBox3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pictureBox3.Location = new System.Drawing.Point(490, 45);
+            this.pictureBox3.Name = "pictureBox3";
+            this.pictureBox3.Size = new System.Drawing.Size(109, 139);
+            this.pictureBox3.TabIndex = 78;
+            this.pictureBox3.TabStop = false;
             // 
-            // label11
+            // pictureBox4
             // 
-            this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(277, 43);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(53, 13);
-            this.label11.TabIndex = 59;
-            this.label11.Text = "maxLearn";
+            this.pictureBox4.BackColor = System.Drawing.SystemColors.ButtonFace;
+            this.pictureBox4.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.pictureBox4.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pictureBox4.Location = new System.Drawing.Point(605, 45);
+            this.pictureBox4.Name = "pictureBox4";
+            this.pictureBox4.Size = new System.Drawing.Size(109, 139);
+            this.pictureBox4.TabIndex = 79;
+            this.pictureBox4.TabStop = false;
+            // 
+            // pictureBox5
+            // 
+            this.pictureBox5.BackColor = System.Drawing.SystemColors.ButtonFace;
+            this.pictureBox5.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.pictureBox5.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pictureBox5.Location = new System.Drawing.Point(720, 45);
+            this.pictureBox5.Name = "pictureBox5";
+            this.pictureBox5.Size = new System.Drawing.Size(109, 139);
+            this.pictureBox5.TabIndex = 80;
+            this.pictureBox5.TabStop = false;
+            // 
+            // pictureBox6
+            // 
+            this.pictureBox6.BackColor = System.Drawing.SystemColors.ButtonFace;
+            this.pictureBox6.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.pictureBox6.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pictureBox6.Location = new System.Drawing.Point(835, 45);
+            this.pictureBox6.Name = "pictureBox6";
+            this.pictureBox6.Size = new System.Drawing.Size(109, 139);
+            this.pictureBox6.TabIndex = 81;
+            this.pictureBox6.TabStop = false;
             // 
             // Form1
             // 
@@ -706,6 +783,11 @@
             this.tabPage3.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.tabControl1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox5)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox6)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -765,6 +847,12 @@
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.TextBox minLearnTb;
         private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.OpenFileDialog openFileDialog2;
+        private System.Windows.Forms.PictureBox pictureBox6;
+        private System.Windows.Forms.PictureBox pictureBox5;
+        private System.Windows.Forms.PictureBox pictureBox4;
+        private System.Windows.Forms.PictureBox pictureBox3;
+        private System.Windows.Forms.PictureBox pictureBox2;
     }
 }
 
