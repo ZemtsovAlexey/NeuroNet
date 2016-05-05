@@ -42,6 +42,7 @@ namespace test
         private int _errors;
         private ActivationNetwork _network;
         private DistanceNetwork _distanceNetwork;
+        Random rnd = new Random();
 
         private double minLearn = -1;
         private double maxLearn = 1;
@@ -174,16 +175,29 @@ namespace test
 
             double[] temp = new double[(bitmap.Width) * (bitmap.Height)];
 
-            for (int i = 0; i < (bitmap.Width); i++)
+            //for (int i = 0; i < (bitmap.Width); i++)
+            //{
+            //    for (int j = 0; j < (bitmap.Height); j++)
+            //    {
+            //        Col = bitmap.GetPixel(i, j);
+
+            //        var a = (Convert.ToDouble(Col.R) + Convert.ToDouble(Col.G) + Convert.ToDouble(Col.B)) / 3;
+            //        var b = Convert.ToDouble(Col.A);
+
+            //        temp[i * (j + 1)] = b == 255 ? 1 : 0;
+            //    }
+            //}
+
+            for (int y = 0; y < bitmap.Height; y++)
             {
-                for (int j = 0; j < (bitmap.Height); j++)
+                for (int x = 0; x < bitmap.Width; x++)
                 {
-                    Col = bitmap.GetPixel(i, j);
+                    Col = bitmap.GetPixel(x, y);
 
                     var a = (Convert.ToDouble(Col.R) + Convert.ToDouble(Col.G) + Convert.ToDouble(Col.B)) / 3;
                     var b = Convert.ToDouble(Col.A);
 
-                    temp[i * (j + 1)] = b == 255 ? 1 : 0;
+                    temp[y * bitmap.Width + x] = b < 255 ? 0 : 1;
                 }
             }
 
@@ -334,7 +348,7 @@ namespace test
 
                 for (var i = 0; i < binValue.Length; i++)
                 {
-                    digits[i] = binValue[i] == '0' ? 0 : 1;
+                    digits[i] = binValue[i] == '0' ? minLearn : maxLearn;
                 }
             }
             else if (_outputFunction is BoolOutput)
@@ -402,7 +416,7 @@ namespace test
 
         private void GenerateBtn_Click(object sender, EventArgs e)
         {
-            var captcha = Generator.Gen(1, _heightRange, _lineCount, 16, 23);
+            var captcha = Generator.Gen(1, _heightRange, _lineCount, 16, 23, random: rnd);
             var bm = Generator.ExpandTo15X23Height(captcha.Image, Color.FromArgb(0, 0, 0, 0));
             var list = new List<Bitmap> { bm };
 
@@ -416,14 +430,17 @@ namespace test
 
             resultTextBox.Clear();
 
-            for (var y = 1; y <= 23; y++)
+            string res = null;
+            for (var i = 1; i <= temp.Length; i++)
             {
-                for (var x = 1; x <= 16; x++)
+                res += temp[i - 1].ToString();
+
+                if (i % 16 == 0 && i > 1)
                 {
-                    resultTextBox.AppendText($"{temp[(x - 1)*(y-1)]}");
+                    resultTextBox.AppendText($"{Environment.NewLine}{res}");
+                    res = null;
                 }
 
-                resultTextBox.AppendText($"{Environment.NewLine}");
             }
         }
 
@@ -535,7 +552,7 @@ namespace test
             while (success < _stopSuccess)
             {
                 var errors = 0;
-                var captcha = Generator.Gen(1, _heightRange, _lineCount, 16, 23, random: random);
+                var captcha = Generator.Gen(1, _heightRange, _lineCount, 16, 23, random: rnd);
                 //var blocks = Generator.SplitBlocksConst(captcha.Image, ColorTranslator.FromHtml("#ffffff"), true);
                 var bm = Generator.ExpandTo15X23Height(captcha.Image, Color.FromArgb(0, 0, 0, 0));
                 var blocks = new List<Bitmap> { bm };
@@ -551,7 +568,7 @@ namespace test
                         var res = new List<double>();
 
                         foreach (var dVal in captcha.Captcha[k].ToString()
-                            .Select(x => Convert.ToInt32(x.ToString()))
+                            .Select(x => (int)x)
                             .Select(IntToDoubleArr))
                         {
                             res.AddRange(dVal);
@@ -987,14 +1004,17 @@ namespace test
 
             resultTextBox.Clear();
 
-            for (var y = 1; y <= 23; y++)
+            string res = null;
+            for (var i = 1; i <= temp.Length; i++)
             {
-                for (var x = 1; x <= 16; x++)
+                res += temp[i - 1].ToString();
+
+                if (i % 16 == 0 && i > 1)
                 {
-                    resultTextBox.AppendText($"{temp[(x - 1) * (y - 1)]}");
+                    resultTextBox.AppendText($"{Environment.NewLine}{res}");
+                    res = null;
                 }
 
-                resultTextBox.AppendText($"{Environment.NewLine}");
             }
         }
     }

@@ -31,12 +31,13 @@ namespace CaptchaGenerator
             //grfs.DrawLine(Pens.Red, rnd.Next(0, 50), rnd.Next(10, 30), rnd.Next(0, 200), rnd.Next(0, 20));
 
             //string str = "88642";//string.Format("{0}", rnd.Next(100000, 999999));
-            string str = "";
-            while (str.Length < stringLength)
-            {
-                str += $"{rnd.Next(100000, 999999)}";
-            }
-            str = str.Substring(0, stringLength);
+            //string str = "";
+            //while (str.Length < stringLength)
+            //{
+            //    str += $"{rnd.Next(100000, 999999)}";
+            //}
+            //str = str.Substring(0, stringLength);
+            string str = RandomString(stringLength);
 
             Graphics[] cGrfs = new Graphics[stringLength];
             SizeF[] sizes = new SizeF[stringLength];
@@ -55,7 +56,7 @@ namespace CaptchaGenerator
 
                 Brush b = new SolidBrush(ColorTranslator.FromHtml("#505050"));
 
-                cGrfs[i].TextRenderingHint = TextRenderingHint.SingleBitPerPixel;
+                cGrfs[i].TextRenderingHint = TextRenderingHint.SingleBitPerPixelGridFit;
                 cGrfs[i].DrawString(c.ToString(), font, b, 0, 0, StringFormat.GenericTypographic);
 
                 //for (int j = 0; j < rnd.Next(0, numberLine); j++)
@@ -290,7 +291,7 @@ namespace CaptchaGenerator
 
                 for (int j = 0; j < img.Height; j++)
                 {
-                    if (img.GetPixel(i, j) != backColor)
+                    if (img.GetPixel(i, j).A == 255)
                     {
                         findedPixels++;
                     }
@@ -322,6 +323,33 @@ namespace CaptchaGenerator
         public static Bitmap ExpandTo15X23Height(Bitmap img, Color backColor)
         {
             const int minPixels = 1;
+            int x = 0;
+
+            for (int i = 0; i < img.Width; i++)
+            {
+                int findedPixels = 0;
+                bool founded = false;
+
+                for (int j = 0; j < img.Height; j++)
+                {
+                    if (img.GetPixel(i, j).A == 255)
+                    {
+                        findedPixels++;
+                    }
+
+                    if (findedPixels >= minPixels)
+                    {
+                        founded = true;
+                        break;
+                    }
+                }
+                if (founded)
+                {
+                    x = i;
+                    break;
+                }
+            }
+
             int y = 0;
 
             for (int i = 0; i < img.Height; i++)
@@ -331,7 +359,7 @@ namespace CaptchaGenerator
 
                 for (int j = 0; j < img.Width; j++)
                 {
-                    if (img.GetPixel(i, j) != backColor)
+                    if (img.GetPixel(j, i).A == 255)
                     {
                         findedPixels++;
                     }
@@ -353,13 +381,20 @@ namespace CaptchaGenerator
             using (Graphics g = Graphics.FromImage(bitmap))
             {
                 g.FillRectangle(new SolidBrush(backColor), 0, 0, bitmap.Width, bitmap.Height);
-                Rectangle rect = new Rectangle(0, y, img.Width, img.Height-y);
+                Rectangle rect = new Rectangle(x, y, img.Width - x, img.Height - y);
                 g.DrawImage(img.Clone(rect, img.PixelFormat), new Point(0, 0));
             }
 
             return bitmap;
         }
 
+        private static string RandomString(int length)
+        {
+            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+            var random = new Random();
+            return new string(Enumerable.Repeat(chars, length)
+              .Select(s => s[random.Next(s.Length)]).ToArray());
+        }
 
         private static Font GetFont(Random random)
         {
@@ -371,7 +406,7 @@ namespace CaptchaGenerator
                     return new Font("MV Boli", 18, FontStyle.Regular, GraphicsUnit.Point);
 
                 case 1:
-                    return new Font("Impact", 18, FontStyle.Regular, GraphicsUnit.Point);
+                    return new Font("Impact", 6.25f, FontStyle.Regular, GraphicsUnit.Millimeter);
 
                 default: return new Font("MV Boli", 15, FontStyle.Bold);
             }
