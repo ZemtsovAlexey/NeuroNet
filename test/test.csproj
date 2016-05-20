@@ -138,6 +138,23 @@
       <Name>CaptchaGenerator</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="learn\320986\1.png" />
+    <EmbeddedResource Include="learn\320986\2.png" />
+    <EmbeddedResource Include="learn\320986\3.png" />
+    <EmbeddedResource Include="learn\320986\4.png" />
+    <EmbeddedResource Include="learn\487858\2.png" />
+    <EmbeddedResource Include="learn\487858\3.png" />
+    <EmbeddedResource Include="learn\487858\4.png" />
+    <EmbeddedResource Include="learn\487858\untitled.png" />
+    <EmbeddedResource Include="learn\827186\2.png" />
+    <EmbeddedResource Include="learn\827186\3.png" />
+    <EmbeddedResource Include="learn\827186\untitled.png" />
+    <EmbeddedResource Include="learn\862244\2.png" />
+    <EmbeddedResource Include="learn\862244\3.png" />
+    <EmbeddedResource Include="learn\862244\untitled.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

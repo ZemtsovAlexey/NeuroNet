@@ -4,8 +4,10 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Forms.DataVisualization.Charting;
@@ -42,6 +44,8 @@ namespace test
         private int _errors;
         private ActivationNetwork _network;
         private DistanceNetwork _distanceNetwork;
+        private List<string> listImg = Directory.GetFiles("D:\\git\\NeuroNet\\test\\learn", "*.png", SearchOption.AllDirectories).ToList();
+
         Random rnd = new Random();
 
         private double minLearn = -1;
@@ -77,7 +81,7 @@ namespace test
             _outputFunction.Count = _digitsCount;
             _outputNeurons = _outputFunction.OutputNeurons;
 
-            var inputSize = 16 * 30;
+            var inputSize = 200 * 100;
             var layers = NetHelpers.GetLayerSizeList(_netSizeX, _netSizeY, _outputNeurons);
             var random = new RandomNumbers();
 
@@ -197,7 +201,7 @@ namespace test
                     var a = (Convert.ToDouble(Col.R) + Convert.ToDouble(Col.G) + Convert.ToDouble(Col.B)) / 3;
                     var b = Convert.ToDouble(Col.A);
 
-                    temp[y * bitmap.Width + x] = b < 255 ? 0 : 1;
+                    temp[y * bitmap.Width + x] = a;
                 }
             }
 
@@ -446,79 +450,83 @@ namespace test
 
         private void button5_Click(object sender, EventArgs e)
         {
-            List<Bitmap> list = new List<Bitmap>();
-            int cicleCount = 0;
+            var number = rnd.Next(listImg.Count);
+            var bitmap = new Bitmap(listImg[number]);
+            pictureBox1.Image = bitmap;
 
-            while (list.Count != 5)
-            {
-                pictureBox1.Load("http://195.16.122.162/osrweb/UserControls/Captcha.ashx?ClientID=Captcha_ctl00_ContentPlaceHolderBody_TabMain_PanelSearch_CaptchaDigit_ImageCaptcha&FontName=Times+New+Roman&CaptchaColor=%23ececec&ColorLine=%23ececec&ColorBorder=&FontColor=&%D0%A1haracterSet=1234567890&FontSize=18&CaptchaLength=5&%D0%A1aptchaWidth=80&%D0%A1aptchaHeight=34&RandomHeight=4&NumberLine=8&time=07.04.2016%2010:43:01");
-                var b = new Bitmap(pictureBox1.Image);
-                MakeGray(b);
-                Contrast(b, 100);
+            //List<Bitmap> list = new List<Bitmap>();
+            //int cicleCount = 0;
 
-                list = Generator.SplitBlocksConst(b, ColorTranslator.FromHtml("#ffffff"), false);
-                Application.DoEvents();
-                if (cicleCount++ > 20)
-                {
-                    MessageBox.Show("Не разбито на блоки за 20 циклов");
-                    return;
-                }
-            }
+            //while (list.Count != 5)
+            //{
+            //    pictureBox1.Load("http://195.16.122.162/osrweb/UserControls/Captcha.ashx?ClientID=Captcha_ctl00_ContentPlaceHolderBody_TabMain_PanelSearch_CaptchaDigit_ImageCaptcha&FontName=Times+New+Roman&CaptchaColor=%23ececec&ColorLine=%23ececec&ColorBorder=&FontColor=&%D0%A1haracterSet=1234567890&FontSize=18&CaptchaLength=5&%D0%A1aptchaWidth=80&%D0%A1aptchaHeight=34&RandomHeight=4&NumberLine=8&time=07.04.2016%2010:43:01");
+            //    var b = new Bitmap(pictureBox1.Image);
+            //    MakeGray(b);
+            //    Contrast(b, 100);
 
-            foreach (var bitmap in list)
-            {
-                Blur(bitmap);
-                Contrast(bitmap, 100);
-            }
+            //    list = Generator.SplitBlocksConst(b, ColorTranslator.FromHtml("#ffffff"), false);
+            //    Application.DoEvents();
+            //    if (cicleCount++ > 20)
+            //    {
+            //        MessageBox.Show("Не разбито на блоки за 20 циклов");
+            //        return;
+            //    }
+            //}
 
-            pictureBox1.BackgroundImage = list[0];
+            //foreach (var bitmap in list)
+            //{
+            //    Blur(bitmap);
+            //    Contrast(bitmap, 100);
+            //}
 
-            var res = new List<string>();
+            //pictureBox1.BackgroundImage = list[0];
 
-            for (var i = 0; i < list.Count; i++)
-            {
-                var t = GetTemp(list[i]);
-                var o = _netList.Select(net => _outputFunction.Get(net, t)).ToList();
+            //var res = new List<string>();
 
-                if (i == 0)
-                {
-                    res.AddRange(o);
-                }
-                else
-                {
-                    for (var k = 0; k < o.Count; k++)
-                    {
-                        res[k] += o[k];
-                    }
-                }
-            }
+            //for (var i = 0; i < list.Count; i++)
+            //{
+            //    var t = GetTemp(list[i]);
+            //    var o = _netList.Select(net => _outputFunction.Get(net, t)).ToList();
 
-            resultTextBox.AppendText($"{Environment.NewLine}");
+            //    if (i == 0)
+            //    {
+            //        res.AddRange(o);
+            //    }
+            //    else
+            //    {
+            //        for (var k = 0; k < o.Count; k++)
+            //        {
+            //            res[k] += o[k];
+            //        }
+            //    }
+            //}
 
-            for (var i = 0; i < res.Count; i++)
-            {
-                var myList = resultTextBox.Lines.ToList();
+            //resultTextBox.AppendText($"{Environment.NewLine}");
 
-                if (myList.Count > 40)
-                {
-                    resultTextBox.Clear();
-                }
+            //for (var i = 0; i < res.Count; i++)
+            //{
+            //    var myList = resultTextBox.Lines.ToList();
 
-                resultTextBox.AppendText($"{Environment.NewLine}Net {i + 1} - {res[i]}");
-                resultTextBox.SelectionStart = resultTextBox.Text.Length;
-                resultTextBox.ScrollToCaret();
-            }
+            //    if (myList.Count > 40)
+            //    {
+            //        resultTextBox.Clear();
+            //    }
+
+            //    resultTextBox.AppendText($"{Environment.NewLine}Net {i + 1} - {res[i]}");
+            //    resultTextBox.SelectionStart = resultTextBox.Text.Length;
+            //    resultTextBox.ScrollToCaret();
+            //}
 
             string result = null;
 
-            foreach (var bitmap in list)
-            {
-                var t = GetTemp(bitmap);
-                var o = _netList.Select(net => _outputFunction.Get(net, t)).ToList();
-                var answer = o.GroupBy(x => x).OrderByDescending(x => x.Count()).FirstOrDefault()?.Key;
+            //foreach (var bitmap in list)
+            //{
+            var t = GetTemp(bitmap);
+            var o = _netList.Select(net => _outputFunction.Get(net, t)).ToList();
+            var answer = o.GroupBy(x => x).OrderByDescending(x => x.Count()).FirstOrDefault()?.Key;
 
-                result += answer;
-            }
+            result += answer;
+            //}
 
             captchaResultLabel.Text = result;
         }
@@ -537,7 +545,7 @@ namespace test
                 }
                 else
                 {
-                    Learn();
+                    LearnTest();
                 }
             });
         }
@@ -601,6 +609,63 @@ namespace test
 
                     iteration++;
                 }
+            }
+        }
+
+        private void LearnTest()
+        {
+            var net = _netList.First();
+            int success = 0;
+            long iteration = 0;
+
+            while (success < _stopSuccess)
+            {
+                var errors = 0;
+                var number = rnd.Next(listImg.Count);
+                var bitmap = new Bitmap(listImg[number]);
+                var r = Regex.Match(listImg[number], @"(?<number>\d*)\\(?=\w*\.png)");
+                var captcha = r.Groups["number"].ToString();
+                var temp = GetTemp(bitmap);
+                var answer = _outputFunction.Get(net, temp);
+                var firstAnswer = answer;
+
+                while (answer != captcha)
+                {
+                    var res = new List<double>();
+
+                    foreach (var dVal in captcha.ToCharArray()
+                        .Select(x => Convert.ToInt32(x.ToString()))
+                        .Select(IntToDoubleArr))
+                    {
+                        res.AddRange(dVal);
+                    }
+
+                    var resArr = res.ToArray();
+
+                    success = 0;
+
+                    net.Correct(temp, resArr, _kLearn);
+                    answer = _outputFunction.Get(net, temp);
+                    errors++;
+
+                    if (errors > 3000)
+                    {
+                        break;
+                    }
+                }
+
+                if (errors == 0)
+                {
+                    success++;
+                }
+
+                if (_showLogs)
+                {
+                    BeginInvoke(new EventHandler<LogEventArgs>(ShowLogs), this,
+                        new LogEventArgs(iteration, captcha, firstAnswer, errors, success));
+                }
+
+                iteration++;
             }
         }
 
@@ -975,47 +1040,54 @@ namespace test
 
         private void openFileDialog2_FileOk(object sender, CancelEventArgs e)
         {
+            listImg = Directory.GetFiles("D:\\git\\NeuroNet\\test\\learn", "*.png", SearchOption.AllDirectories).ToList();
             var img = new Bitmap(openFileDialog2.FileName);
             pictureBox1.Image = img;
 
-            var list = Generator.SplitBlocksConst(img, Color.FromArgb(0, 0, 50, 0), true);
+            //var list = Generator.SplitBlocksConst(img, Color.FromArgb(0, 0, 50, 0), true);
 
-            pictureBox1.BackgroundImage = list[0];
-            pictureBox2.BackgroundImage = list[0];
-            pictureBox3.BackgroundImage = list[1];
-            pictureBox4.BackgroundImage = list[2];
-            pictureBox5.BackgroundImage = list[3];
-            pictureBox6.BackgroundImage = list[4];
+            //pictureBox1.BackgroundImage = list[0];
+            //pictureBox2.BackgroundImage = list[0];
+            //pictureBox3.BackgroundImage = list[1];
+            //pictureBox4.BackgroundImage = list[2];
+            //pictureBox5.BackgroundImage = list[3];
+            //pictureBox6.BackgroundImage = list[4];
 
             string result = null;
 
-            foreach (var bitmap in list)
-            {
-                var t = GetTemp(bitmap);
-                var o = _netList.Select(net => _outputFunction.Get(net, t)).ToList();
-                var answer = o.GroupBy(x => x).OrderByDescending(x => x.Count()).FirstOrDefault()?.Key;
+            var t = GetTemp(img);
+            var o = _netList.Select(net => _outputFunction.Get(net, t)).ToList();
+            var answer = o.GroupBy(x => x).OrderByDescending(x => x.Count()).FirstOrDefault()?.Key;
 
-                result += answer;
-            }
+            captchaResultLabel.Text = answer;
 
-            captchaResultLabel.Text = result;
+            //foreach (var bitmap in list)
+            //{
+            //    var t = GetTemp(bitmap);
+            //    var o = _netList.Select(net => _outputFunction.Get(net, t)).ToList();
+            //    var answer = o.GroupBy(x => x).OrderByDescending(x => x.Count()).FirstOrDefault()?.Key;
 
-            var temp = GetTemp(list[0]);
+            //    result += answer;
+            //}
 
-            resultTextBox.Clear();
+            //captchaResultLabel.Text = result;
 
-            string res = null;
-            for (var i = 1; i <= temp.Length; i++)
-            {
-                res += temp[i - 1].ToString();
+            //var temp = GetTemp(list[0]);
 
-                if (i % 16 == 0 && i > 1)
-                {
-                    resultTextBox.AppendText($"{Environment.NewLine}{res}");
-                    res = null;
-                }
+            //resultTextBox.Clear();
 
-            }
+            //string res = null;
+            //for (var i = 1; i <= temp.Length; i++)
+            //{
+            //    res += temp[i - 1].ToString();
+
+            //    if (i % 16 == 0 && i > 1)
+            //    {
+            //        resultTextBox.AppendText($"{Environment.NewLine}{res}");
+            //        res = null;
+            //    }
+
+            //}
         }
     }
 }
